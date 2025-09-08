@@ -1,0 +1,41 @@
+# Ignore environment files with sensitive data
+.env
+
+# ==================================
+# Java / Maven Backend Rules
+# ==================================
+
+# Compiled class file
+backend/*.class
+
+# Log files
+backend/*.log
+
+# BlueJ files
+backend/*.ctxt
+
+# Mobile Tools for Java (J2ME)
+backend/bin/
+backend/preverified/
+
+# Package Files #
+backend/*.jar
+backend/*.war
+backend/*.ear
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/pom.xml.versionsBackup
+backend/release.properties
+backend/dependency-reduced-pom.xml
+
+# Maven build output
+backend/target/
+
+# IDE configuration files
+backend/.idea/
+backend/*.iml
+backend/*.ipr
+backend/*.iws
+backend/.project
+backend/.classpath
+backend/.settings/
