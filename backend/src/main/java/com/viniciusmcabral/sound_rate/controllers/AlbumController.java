@@ -2,6 +2,8 @@ package com.viniciusmcabral.sound_rate.controllers;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,8 +45,8 @@ public class AlbumController {
 	}
 
 	@GetMapping("/{albumId}/reviews")
-	public ResponseEntity<List<AlbumReviewDTO>> getReviewsForAlbum(@PathVariable String albumId) {
-		List<AlbumReviewDTO> reviews = reviewService.getReviewsForAlbum(albumId);
+	public ResponseEntity<Page<AlbumReviewDTO>> getReviewsForAlbum(@PathVariable String albumId, Pageable pageable) {
+		Page<AlbumReviewDTO> reviews = reviewService.getReviewsForAlbum(albumId, pageable);
 		return ResponseEntity.ok(reviews);
 	}
 }

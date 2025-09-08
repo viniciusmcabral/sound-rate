@@ -5,6 +5,10 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +18,7 @@ import com.viniciusmcabral.sound_rate.dtos.response.AlbumReviewDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.CriticReviewDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.dtos.spotify.SpotifyAlbumDTO;
+import com.viniciusmcabral.sound_rate.models.AlbumReview;
 import com.viniciusmcabral.sound_rate.models.User;
 import com.viniciusmcabral.sound_rate.repositories.AlbumRatingRepository;
 import com.viniciusmcabral.sound_rate.repositories.AlbumReviewRepository;
@@ -52,10 +57,13 @@ public class AlbumService {
 
 		Double communityScore = albumRatingRepository.findCommunityAverageRating(albumId).orElse(null);
 
-		List<AlbumReviewDTO> userReviews = albumReviewRepository.findByAlbumId(albumId).stream()
-				.map(review -> new AlbumReviewDTO(review.getId(), review.getText(), review.getCreatedAt(),
-						new UserDTO(review.getUser().getId(), review.getUser().getUsername())))
-				.collect(Collectors.toList());
+		Pageable firstPageOfReviews = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+		Page<AlbumReview> reviewPage = albumReviewRepository.findByAlbumId(albumId, firstPageOfReviews);
+
+		List<AlbumReviewDTO> userReviews = reviewPage.getContent().stream()
+		        .map(review -> new AlbumReviewDTO(review.getId(), review.getText(), review.getCreatedAt(),
+		                new UserDTO(review.getUser().getId(), review.getUser().getUsername())))
+		        .collect(Collectors.toList());
 
 		Integer currentUserRating = findCurrentUserRating(albumId);
 

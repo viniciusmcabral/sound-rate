@@ -1,19 +1,20 @@
 package com.viniciusmcabral.sound_rate.services;
 
+import java.util.NoSuchElementException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.viniciusmcabral.sound_rate.dtos.request.ReviewRequestDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.AlbumReviewDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.models.AlbumReview;
 import com.viniciusmcabral.sound_rate.models.User;
 import com.viniciusmcabral.sound_rate.repositories.AlbumReviewRepository;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 public class ReviewService {
@@ -68,10 +69,10 @@ public class ReviewService {
 		albumReviewRepository.delete(reviewToDelete);
 	}
 
-	public List<AlbumReviewDTO> getReviewsForAlbum(String albumId) {
-		return albumReviewRepository.findByAlbumId(albumId).stream().map(this::convertToDto)
-				.collect(Collectors.toList());
-	}
+	public Page<AlbumReviewDTO> getReviewsForAlbum(String albumId, Pageable pageable) {
+        Page<AlbumReview> reviewPage = albumReviewRepository.findByAlbumId(albumId, pageable);
+        return reviewPage.map(this::convertToDto);
+    }
 
 	private User getCurrentUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
