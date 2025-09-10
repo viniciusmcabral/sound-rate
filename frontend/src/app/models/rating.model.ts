@@ -1,5 +1,11 @@
 import { User } from './user.model';
 
+export interface RatingRequest {
+  albumId: string;
+  trackId?: string;
+  rating: number;
+}
+
 export interface AlbumRating {
   id: number;
   rating: number;

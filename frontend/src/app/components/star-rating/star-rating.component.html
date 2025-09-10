@@ -1,0 +1,7 @@
+<div class="star-container">
+    <mat-icon *ngFor="let star of stars" (click)="rate(star)" (mouseenter)="setHoverRating(star)"
+        (mouseleave)="clearHoverRating()">
+        {{ (hoverRating || rating) >= star ? 'star' : 'star_border' }}
+    </mat-icon>
+</div>
+

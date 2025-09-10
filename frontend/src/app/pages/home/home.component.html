@@ -1,1 +1,14 @@
-<p>home works!</p>
+<div class="home-container">
+    <h1 class="headline">Find. Listen. Rate</h1>
+    <p class="subheadline">Your music diary</p>
+
+    <mat-form-field class="search-bar" appearance="outline">
+        <mat-label>Search by album or artist...</mat-label>
+        <input matInput type="text" [formControl]="searchControl">
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field>
+
+    <div class="results-grid" *ngIf="albums$ | async as albums">
+        <app-album-card *ngFor="let album of albums" [album]="album"></app-album-card>
+    </div>
+</div>

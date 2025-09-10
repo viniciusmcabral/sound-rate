@@ -1,0 +1,40 @@
+<div class="page-container" *ngIf="albumDetails$ | async as details; else loading">
+    <header class="album-header">
+        <img [src]="getAlbumCover(details)" alt="Album cover" class="album-cover">
+        <div class="album-info">
+            <h1>{{ details.spotifyDetails.name }}</h1>
+            <h2 *ngIf="details.spotifyDetails.artists.length > 0">
+                <span>{{ details.spotifyDetails.artists[0].name }}</span>
+            </h2>
+            <p class="release-date">{{ details.spotifyDetails.release_date | slice:0:4 }}</p>
+
+            <div class="ratings-section">
+                <div class="rating-box" *ngIf="authService.isAuthenticated()">
+                    <span class="rating-label" aria-label="Your rating">Your rating</span>
+                    <app-star-rating [rating]="details.currentUserRating || 0" (ratingChange)="onRatingChanged($event)">
+                    </app-star-rating>
+                </div>
+                <div class="rating-box">
+                    <span class="rating-label" aria-label="Average rating">Average</span>
+                    <app-star-rating [rating]="details.communityScore || 0" [readonly]="true"></app-star-rating>
+                    <span class="average-score">{{ details.communityScore | number:'1.1-1' }}</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <mat-tab-group>
+        <mat-tab label="Tracks">
+            <mat-list>
+                <mat-list-item>Coming Soon: Tracklist</mat-list-item>
+            </mat-list>
+        </mat-tab>
+        <mat-tab label="Críticas">
+            <p>Coming soon: List of user reviews</p>
+        </mat-tab>
+    </mat-tab-group>
+</div>
+
+<ng-template #loading>
+    <p>Loading album details...</p>
+</ng-template>

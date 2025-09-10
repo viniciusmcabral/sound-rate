@@ -1,0 +1,9 @@
+<a [routerLink]="['/album', album.id]" class="card-link">
+    <mat-card *ngIf="album" class="album-card">
+        <img mat-card-image [src]="albumCover" [alt]="album.name">
+        <mat-card-header>
+            <mat-card-title>{{ album.name }}</mat-card-title>
+            <mat-card-subtitle *ngIf="album.artists.length > 0">{{ album.artists[0].name }}</mat-card-subtitle>
+        </mat-card-header>
+    </mat-card>
+</a>

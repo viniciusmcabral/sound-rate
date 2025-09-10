@@ -1,0 +1,29 @@
+.home-container {
+    padding: 24px;
+    text-align: center;
+}
+
+.headline {
+    font-size: 3rem;
+    font-weight: 300;
+    margin-bottom: 8px;
+}
+
+.subheadline {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 32px;
+}
+
+.search-bar {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 40px;
+}
+
+.results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    justify-content: center;
+}

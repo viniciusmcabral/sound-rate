@@ -1,0 +1,13 @@
+.star-container {
+    display: flex;
+    color: #ffca28;
+}
+
+.star-container:not(.readonly) mat-icon {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+        transform: scale(1.2);
+    }
+}
