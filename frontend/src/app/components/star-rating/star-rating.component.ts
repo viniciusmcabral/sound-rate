@@ -25,7 +25,6 @@ export class StarRatingComponent {
 
   rate(rating: number): void {
     if (this.readonly) return;
-    this.rating = rating;
     this.ratingChange.emit(rating);
   }
 
