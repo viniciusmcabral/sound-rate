@@ -5,9 +5,15 @@
 
   <span class="spacer"></span>
 
-  <a mat-button routerLink="/login">Login</a>
-  <a mat-button routerLink="/register">Cadastro</a>
+  <ng-container *ngIf="!(currentUser$ | async)">
+    <a mat-button routerLink="/login">Login</a>
+    <a mat-button routerLink="/register">Register</a>
+  </ng-container>
 
+  <ng-container *ngIf="currentUser$ | async as user">
+    <a mat-button [routerLink]="['/user', user.username]">{{ user.username }}'s profile</a>
+    <button mat-button (click)="logout()">Logout</button>
+  </ng-container>
 </mat-toolbar>
 
 <main class="main-content">

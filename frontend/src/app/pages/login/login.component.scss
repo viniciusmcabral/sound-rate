@@ -1,0 +1,26 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    padding: 20px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.error-message {
+    color: #f44336;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+button.full-width {
+    margin-top: 10px;
+}
