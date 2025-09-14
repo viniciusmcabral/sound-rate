@@ -1,13 +1,28 @@
 .star-container {
-    display: flex;
-    color: #ffca28;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
 }
 
-.star-container:not(.readonly) mat-icon {
-    cursor: pointer;
-    transition: transform 0.3s ease;
+.star-container button {
+  color: #ffca28;
+  position: relative;
+  padding: 0;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
 
-    &:hover {
-        transform: scale(1.2);
-    }
+.star-container button mat-icon {
+  font-size: 28px;
+}
+
+.star-container button:not([disabled]):hover {
+  transform: scale(1.15);
 }

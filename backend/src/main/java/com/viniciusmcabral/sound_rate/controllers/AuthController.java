@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.viniciusmcabral.sound_rate.dtos.request.LoginRequestDTO;
-import com.viniciusmcabral.sound_rate.dtos.request.RegisterUserDTO;
+import com.viniciusmcabral.sound_rate.dtos.request.RegisterRequestDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.AuthResponseDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.models.User;
@@ -39,17 +39,14 @@ public class AuthController {
 		var authentication = manager.authenticate(authToken);
 		var user = (User) authentication.getPrincipal();
 		var tokenJWT = tokenService.generateToken(user);
-		var userDto = new UserDTO(user.getId(), user.getUsername());
-		
+		var userDto = new UserDTO(user.getId(), user.getUsername(), user.getAvatarUrl());
+
 		return ResponseEntity.ok(new AuthResponseDTO(tokenJWT, userDto));
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<AuthResponseDTO> register(@RequestBody @Valid RegisterUserDTO registerDTO) {
-		User newUser = authService.registerUser(registerDTO);
-		var tokenJWT = tokenService.generateToken(newUser);
-		var userDto = new UserDTO(newUser.getId(), newUser.getUsername());
-		
-		return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponseDTO(tokenJWT, userDto));
+	public ResponseEntity<AuthResponseDTO> register(@RequestBody @Valid RegisterRequestDTO registerDTO) {
+		AuthResponseDTO response = authService.registerUser(registerDTO);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }

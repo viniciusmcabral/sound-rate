@@ -13,7 +13,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class StarRatingComponent {
   @Input() rating: number = 0;
   @Input() readonly: boolean = false;
-
   @Output() ratingChange = new EventEmitter<number>();
 
   maxRating: number = 5;
@@ -23,17 +22,39 @@ export class StarRatingComponent {
     return Array.from({ length: this.maxRating }, (_, i) => i + 1);
   }
 
-  rate(rating: number): void {
-    if (this.readonly) return;
-    this.ratingChange.emit(rating);
+  getStarIcon(star: number): string {
+    const ratingToShow = this.hoverRating || this.rating;
+
+    if (ratingToShow >= star) {
+      return 'star';
+    }
+    if (ratingToShow >= star - 0.5) {
+      return 'star_half';
+    }
+    return 'star_border';
   }
 
-  setHoverRating(rating: number): void {
+  rate(star: number, event: MouseEvent): void {
     if (this.readonly) return;
-    this.hoverRating = rating;
+
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
+    const newRating = isHalf ? star - 0.5 : star;
+    this.ratingChange.emit(newRating);
+  }
+
+  setHoverRating(star: number, event: MouseEvent): void {
+    if (this.readonly) return;
+
+    const target = event.target as HTMLElement;
+    const rect = target.getBoundingClientRect();
+    const isHalf = (event.clientX - rect.left) < (rect.width / 2);
+    this.hoverRating = isHalf ? star - 0.5 : star;
   }
 
   clearHoverRating(): void {
+    if (this.readonly) return;
     this.hoverRating = 0;
   }
 

@@ -58,35 +58,32 @@ public class RatingService {
 
 	public Map<String, Object> getUserRatings() {
 		User currentUser = getCurrentUser();
-
 		Pageable pageRequest = PageRequest.of(0, 20, Sort.by("id").descending());
-
+		
 		List<AlbumRatingDTO> albumRatings = albumRatingRepository.findAllByUser(currentUser, pageRequest).stream()
 				.map(this::convertToAlbumRatingDTO).collect(Collectors.toList());
-
 		List<TrackRatingDTO> trackRatings = trackRatingRepository.findAllByUser(currentUser, pageRequest).stream()
 				.map(this::convertToTrackRatingDTO).collect(Collectors.toList());
-
+	
 		return Map.of("albumRatings", albumRatings, "trackRatings", trackRatings);
 	}
 
 	private User getCurrentUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		if (principal instanceof User) {
+		if (principal instanceof User) 
 			return (User) principal;
-		}
-
+		
 		throw new IllegalStateException("Couldn't retrieve authenticated user.");
 	}
 
 	private AlbumRatingDTO convertToAlbumRatingDTO(AlbumRating rating) {
-		UserDTO author = new UserDTO(rating.getUser().getId(), rating.getUser().getUsername());
+		UserDTO author = new UserDTO(rating.getUser().getId(), rating.getUser().getUsername(), rating.getUser().getAvatarUrl());
 		return new AlbumRatingDTO(rating.getId(), rating.getRating(), author);
 	}
 
 	private TrackRatingDTO convertToTrackRatingDTO(TrackRating rating) {
-		UserDTO author = new UserDTO(rating.getUser().getId(), rating.getUser().getUsername());
+		UserDTO author = new UserDTO(rating.getUser().getId(), rating.getUser().getUsername(), rating.getUser().getAvatarUrl());
 		return new TrackRatingDTO(rating.getId(), rating.getRating(), rating.getTrackId(), author);
 	}
 

@@ -1,9 +1,9 @@
 package com.viniciusmcabral.sound_rate.dtos.response;
 
+import com.viniciusmcabral.sound_rate.dtos.deezer.DeezerAlbumDTO;
 import java.util.List;
 
-import com.viniciusmcabral.sound_rate.dtos.spotify.SpotifyAlbumDTO;
-
-public record AlbumDetailsDTO(SpotifyAlbumDTO spotifyDetails, CriticReviewDTO criticReview, Double communityScore, Integer currentUserRating, List<AlbumReviewDTO> userReviews) {
-
+public record AlbumDetailsDTO(DeezerAlbumDTO deezerDetails, Double communityScore, Double currentUserRating,
+		AlbumReviewDTO currentUserReview, List<AlbumReviewDTO> userReviews, long likesCount,
+		boolean isLikedByCurrentUser, boolean isOnListenLaterList) {
 }

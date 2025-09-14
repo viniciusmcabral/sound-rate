@@ -18,7 +18,7 @@ public class TrackRating {
 	private String trackId;
 
 	@Column(nullable = false)
-	private Integer rating;
+	private Double rating;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -27,7 +27,7 @@ public class TrackRating {
 	public TrackRating() {
 	}
 
-	public TrackRating(String albumId, String trackId, Integer rating, User user) {
+	public TrackRating(String albumId, String trackId, Double rating, User user) {
 		this.albumId = albumId;
 		this.trackId = trackId;
 		this.rating = rating;
@@ -58,11 +58,11 @@ public class TrackRating {
 		this.trackId = trackId;
 	}
 
-	public Integer getRating() {
+	public Double getRating() {
 		return rating;
 	}
 
-	public void setRating(Integer rating) {
+	public void setRating(Double rating) {
 		this.rating = rating;
 	}
 

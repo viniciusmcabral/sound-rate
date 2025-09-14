@@ -3,6 +3,7 @@ package com.viniciusmcabral.sound_rate.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,9 @@ public interface AlbumRatingRepository extends JpaRepository<AlbumRating, Long> 
 	Optional<Double> findCommunityAverageRating(String albumId);
 
 	long countByUser(User user);
+
+	@Query("SELECT r.albumId FROM AlbumRating r WHERE r.user = :user ORDER BY r.id DESC")
+	List<String> findAllAlbumIdsByUser(User user);
+
+	Page<AlbumRating> findByUser(User user, Pageable pageable);
 }

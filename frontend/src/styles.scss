@@ -1,9 +1,35 @@
-html, body {
+:root {
+  --background-dark: #14181c;
+  --surface-dark: #2c3440;
+  --primary-text: #e1e3e5;
+  --secondary-text: #9ab;
+  --accent-color: #5e1c7c;
+}
+
+html,
+body {
   height: 100%;
-  background-color: gray;
+  margin: 0;
 }
 
 body {
-  margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: var(--background-dark);
+  color: var(--primary-text);
+}
+
+app-root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+app-root .main-content {
+  flex: 1;
+}
+
+.image-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 4px;
 }

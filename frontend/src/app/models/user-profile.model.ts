@@ -1,5 +1,3 @@
-import { AlbumRating } from './rating.model';
-import { AlbumReview } from './review.model';
 import { User } from './user.model';
 
 export interface UserProfile {
@@ -7,6 +5,7 @@ export interface UserProfile {
   totalReviews: number;
   totalAlbumRatings: number;
   totalTrackRatings: number;
-  recentReviews: AlbumReview[];
-  recentAlbumRatings: AlbumRating[];
+  followersCount: number;
+  followingCount: number;
+  isFollowedByCurrentUser: boolean;
 }

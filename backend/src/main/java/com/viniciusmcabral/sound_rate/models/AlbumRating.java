@@ -1,5 +1,7 @@
 package com.viniciusmcabral.sound_rate.models;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -8,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
@@ -23,7 +27,10 @@ public class AlbumRating {
 	private String albumId;
 
 	@Column(nullable = false)
-	private Integer rating;
+	private Double rating;
+
+	@Column(updatable = false)
+	private LocalDateTime createdAt;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
@@ -32,10 +39,20 @@ public class AlbumRating {
 	public AlbumRating() {
 	}
 
-	public AlbumRating(String albumId, Integer rating, User user) {
+	public AlbumRating(String albumId, Double rating, User user) {
 		this.albumId = albumId;
 		this.rating = rating;
 		this.user = user;
+	}
+
+	@PrePersist
+	protected void onCreate() {
+		createdAt = LocalDateTime.now();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.createdAt = LocalDateTime.now();
 	}
 
 	public Long getId() {
@@ -54,12 +71,20 @@ public class AlbumRating {
 		this.albumId = albumId;
 	}
 
-	public Integer getRating() {
+	public Double getRating() {
 		return rating;
 	}
 
-	public void setRating(Integer rating) {
+	public void setRating(Double rating) {
 		this.rating = rating;
+	}
+
+	public LocalDateTime getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(LocalDateTime createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public User getUser() {
@@ -87,7 +112,7 @@ public class AlbumRating {
 
 	@Override
 	public String toString() {
-		return "AlbumRating{" + "id=" + id + ", albumId='" + albumId + '\'' + ", rating=" + rating +
-				", userId=" + (user != null ? user.getId() : null) + '}';
+		return "AlbumRating{" + "id=" + id + ", albumId='" + albumId + '\'' + ", rating=" + rating + ", userId="
+				+ (user != null ? user.getId() : null) + ", createdAt=" + createdAt + '}';
 	}
 }

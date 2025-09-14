@@ -7,6 +7,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-layout',
@@ -17,12 +18,12 @@ import { CommonModule } from '@angular/common';
     RouterOutlet,
     MatToolbarModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressSpinnerModule
   ],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
-
 export class LayoutComponent {
   currentUser$: Observable<User | null>;
 

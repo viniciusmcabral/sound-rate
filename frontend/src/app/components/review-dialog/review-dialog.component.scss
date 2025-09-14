@@ -1,0 +1,36 @@
+:host {
+  display: block; 
+  background-color: var(--backgroun-dark);
+  color: var(--primary-text); 
+}
+
+[mat-dialog-title] {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--primary-text);
+}
+
+[mat-dialog-content] {
+  padding-top: 20px; 
+}
+
+.review-textarea {
+  width: 100%;
+
+  .mat-mdc-form-field-label {
+    color: var(--secondary-text);
+  }
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  textarea {
+    color: var(--primary-text);
+  }
+}
+
+[mat-dialog-actions] {
+  padding: 8px 24px; 
+}

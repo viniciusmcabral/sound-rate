@@ -13,7 +13,7 @@
 
                 <mat-form-field appearance="outline" class="full-width">
                     <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" type="email" placeholder="Enter your email">
+                    <input matInput formControlName="email" type="email" placeholder="Your best email">
                 </mat-form-field>
 
                 <mat-form-field appearance="outline" class="full-width">
@@ -25,8 +25,20 @@
                 <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
                 <button mat-raised-button color="accent" type="submit" [disabled]="registerForm.invalid"
-                    class="full-width">Register</button>
+                    class="full-width register-button">
+                    Register
+                </button>
             </form>
         </mat-card-content>
+
+        <mat-card-actions>
+            <a routerLink="/login" class="login-link">Already have an account? Sign in</a>
+        </mat-card-actions>
     </mat-card>
 </div>
+
+<ng-template #loading>
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>

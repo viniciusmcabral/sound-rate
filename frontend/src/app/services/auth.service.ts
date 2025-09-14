@@ -8,11 +8,9 @@ import { User } from '../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
-
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
-
   private apiUrl = '/api/v1/auth';
 
   constructor(private http: HttpClient, private router: Router) {
@@ -27,6 +25,10 @@ export class AuthService {
 
   public isAuthenticated(): boolean {
     return !!this.currentUserValue;
+  }
+
+  getToken(): string | null {
+    return localStorage.getItem('jwt_token');
   }
 
   register(registerData: any): Observable<AuthResponse> {
@@ -48,9 +50,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('jwt_token');
-
     this.currentUserSubject.next(null);
-
     this.router.navigate(['/login']);
   }
 
@@ -58,13 +58,13 @@ export class AuthService {
     if (response && response.token && response.user) {
       localStorage.setItem('currentUser', JSON.stringify(response.user));
       localStorage.setItem('jwt_token', response.token);
-
       this.currentUserSubject.next(response.user);
       this.router.navigate(['/']);
     }
   }
 
-  getToken(): string | null {
-    return localStorage.getItem('jwt_token');
+  public updateCurrentUser(user: User): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+    this.currentUserSubject.next(user);
   }
 }
