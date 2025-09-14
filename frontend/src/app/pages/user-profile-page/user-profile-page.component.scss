@@ -1,0 +1,137 @@
+:host {
+    display: block;
+}
+
+.profile-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.profile-info h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-left: auto;
+    flex-wrap: wrap;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 500;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--secondary-text);
+    }
+}
+
+.tab-content {
+    padding-top: 1.5rem;
+}
+
+.activity-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.activity-item {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.activity-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    min-width: 0;
+
+    .review-text {
+        color: var(--secondary-text);
+        margin: 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+
+    .activity-date {
+        font-size: 0.8rem;
+        color: var(--secondary-text);
+        opacity: 0.6;
+    }
+}
+
+.no-activity-message {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-text);
+    font-style: italic;
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.custom-paginator {
+    background: transparent;
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 0;
+}
+
+.profile-actions {
+    margin-top: 1rem;
+}
+
+
+@media (max-width: 600px) {
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    .profile-stats {
+        margin-left: 0;
+    }
+
+    .activity-item {
+        flex-direction: column;
+    }
+}

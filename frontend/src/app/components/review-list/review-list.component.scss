@@ -1,0 +1,52 @@
+.review-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+.review-card {
+    background-color: var(--background-dark);
+    ;
+
+    mat-card-header {
+        .spacer {
+            flex: 1 1 auto;
+        }
+    }
+
+    mat-card-content {
+        p {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            padding: 0 16px 16px 16px;
+        }
+    }
+}
+
+.no-reviews-message {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+}
+
+.review-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0 16px 8px; 
+
+    button {
+        color: var(--secondary-text); 
+    }
+
+    button.liked {
+        color: #e91e63;
+    }
+
+    span {
+        font-size: 0.9rem;
+        color: var(--secondary-text);
+    }
+}
