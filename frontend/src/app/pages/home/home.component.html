@@ -8,7 +8,30 @@
         <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <div class="results-grid" *ngIf="albums$ | async as albums">
-        <app-album-card *ngFor="let album of albums" [album]="album"></app-album-card>
+    <div class="results-container" *ngIf="(albums$ | async) as albums; else loading">
+        <div class="results-grid" *ngIf="albums.length > 0; else (searchControl.value ? noResults : initial)">
+            <app-album-card *ngFor="let album of albums" [album]="album"></app-album-card>
+        </div>
+
+        <ng-template #initial>
+            <div class="info-message">
+                <mat-icon class="info-icon">music_note</mat-icon>
+                <p>Start by searching for your favorite album or artist.</p>
+            </div>
+        </ng-template>
+
+        <ng-template #noResults>
+            <div class="info-message">
+                <mat-icon class="info-icon">search_off</mat-icon>
+                <p>No results found for "<strong>{{ searchControl.value }}</strong>". Try again
+                </p>
+            </div>
+        </ng-template>
     </div>
+
+    <ng-template #loading>
+        <div class="loading-container">
+            <mat-spinner diameter="50"></mat-spinner>
+        </div>
+    </ng-template>
 </div>

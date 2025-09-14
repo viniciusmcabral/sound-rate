@@ -1,10 +1,13 @@
-import { AlbumReview, CriticReview } from './review.model';
-import { SpotifyAlbum } from './spotify.model';
+import { AlbumReview } from './review.model';
+import { DeezerAlbum } from './deezer.model';
 
 export interface AlbumDetails {
-  spotifyDetails: SpotifyAlbum;
-  criticReview: CriticReview | null;
+  deezerDetails: DeezerAlbum;
   communityScore: number | null;
   currentUserRating: number | null;
+  currentUserReview: AlbumReview | null;
   userReviews: AlbumReview[];
+  likesCount: number;
+  isLikedByCurrentUser: boolean;
+  isOnListenLaterList: boolean;
 }

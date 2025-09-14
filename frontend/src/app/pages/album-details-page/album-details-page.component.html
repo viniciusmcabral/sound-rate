@@ -1,40 +1,94 @@
 <div class="page-container" *ngIf="albumDetails$ | async as details; else loading">
     <header class="album-header">
-        <img [src]="getAlbumCover(details)" alt="Album cover" class="album-cover">
-        <div class="album-info">
-            <h1>{{ details.spotifyDetails.name }}</h1>
-            <h2 *ngIf="details.spotifyDetails.artists.length > 0">
-                <span>{{ details.spotifyDetails.artists[0].name }}</span>
-            </h2>
-            <p class="release-date">{{ details.spotifyDetails.release_date | slice:0:4 }}</p>
+        <div class="cover-container">
+            <img [src]="getAlbumCover(details)" alt="Album cover" class="album-cover">
 
-            <div class="ratings-section">
-                <div class="rating-box" *ngIf="authService.isAuthenticated()">
-                    <span class="rating-label" aria-label="Your rating">Your rating</span>
-                    <app-star-rating [rating]="details.currentUserRating || 0" (ratingChange)="onRatingChanged($event)">
-                    </app-star-rating>
+            <button mat-icon-button class="like-button" *ngIf="authService.isAuthenticated()" (click)="toggleLike()"
+                [class.liked]="details.isLikedByCurrentUser"
+                [title]="details.isLikedByCurrentUser ? 'Unlike album' : 'Like album'">
+                <mat-icon>{{ details.isLikedByCurrentUser ? 'favorite' : 'favorite_border' }}</mat-icon>
+            </button>
+        </div>
+
+        <div class="album-info">
+            <h1>{{ details.deezerDetails.title }}</h1>
+            <h2 *ngIf="details.deezerDetails.artist">
+                <span>{{ details.deezerDetails.artist.name }}</span>
+            </h2>
+            <p class="release-date">{{ details.deezerDetails.release_date | slice:0:4 }}</p>
+
+            <div class="stats-and-ratings">
+                <div class="stats-container">
+                    <div class="stat-item">
+                        <mat-icon class="stat-icon">favorite</mat-icon>
+                        <span>{{ details.likesCount }} likes</span>
+                    </div>
                 </div>
-                <div class="rating-box">
-                    <span class="rating-label" aria-label="Average rating">Average</span>
-                    <app-star-rating [rating]="details.communityScore || 0" [readonly]="true"></app-star-rating>
-                    <span class="average-score">{{ details.communityScore | number:'1.1-1' }}</span>
+
+                <div class="ratings-section">
+                    <div class="rating-box" *ngIf="authService.isAuthenticated()">
+                        <span class="rating-label" aria-label="Your rating">Your Rating</span>
+                        <app-star-rating [rating]="details.currentUserRating || 0"
+                            (ratingChange)="onRatingChanged($event)"></app-star-rating>
+                    </div>
+                    <div class="rating-box">
+                        <span class="rating-label" aria-label="Average score">Average</span>
+                        <app-star-rating [rating]="details.communityScore || 0" [readonly]="true"></app-star-rating>
+                        <span class="average-score">{{ details.communityScore | number:'1.1-1' }}</span>
+                    </div>
                 </div>
             </div>
+
+            <div class="actions-section" *ngIf="authService.isAuthenticated() && !details.currentUserReview">
+                <button mat-raised-button color="accent" (click)="openReviewDialog()">
+                    <mat-icon>edit</mat-icon>
+                    Write a Review
+                </button>
+            </div>
+            <button mat-stroked-button (click)="toggleListenLater()" [class.active]="details.isOnListenLaterList"
+                title="{{ details.isOnListenLaterList ? 'Remove from Listen Later' : 'Add to Listen Later' }}">
+                <mat-icon>{{ details.isOnListenLaterList ? 'bookmark_added' : 'bookmark_add' }}</mat-icon>
+                {{ details.isOnListenLaterList ? 'On Your List' : 'Listen Later' }}
+            </button>
         </div>
     </header>
 
-    <mat-tab-group>
+    <mat-tab-group animationDuration="0ms">
         <mat-tab label="Tracks">
-            <mat-list>
-                <mat-list-item>Coming Soon: Tracklist</mat-list-item>
+            <mat-list *ngIf="details.deezerDetails.tracks.data.length > 0; else noTracks">
+                <mat-list-item class="track-item"
+                    *ngFor="let track of details.deezerDetails.tracks.data; let i = index">
+                    <div matListItemTitle class="track-info">
+                        <button mat-icon-button *ngIf="track.preview" (click)="audioService.togglePlay(track.preview)">
+                            <mat-icon>
+                                <span
+                                    *ngIf="(audioService.isPlaying$ | async) && (audioService.currentTrackUrl$ | async) === track.preview; else playIcon">
+                                    pause_circle
+                                </span>
+                                <ng-template #playIcon>play_circle_outline</ng-template>
+                            </mat-icon>
+                        </button>
+                        <span class="track-number">{{ i + 1 }}.</span>
+                        <span class="track-name">{{ track.title }}</span>
+                    </div>
+                    <div matListItemLine class="track-artists">{{ getTrackArtists(track) }}</div>
+                    <span class="track-duration">{{ track.duration * 1000 | formatDuration }}</span>
+                </mat-list-item>
             </mat-list>
+            <ng-template #noTracks>
+                <p class="info-message">The tracklist for this album is not available</p>
+            </ng-template>
         </mat-tab>
-        <mat-tab label="Críticas">
-            <p>Coming soon: List of user reviews</p>
+        <mat-tab label="Reviews">
+            <app-review-list [reviews]="details.userReviews" [currentUser]="authService.currentUserValue"
+                (edit)="openReviewDialog($event)" (delete)="onDeleteReview($event)">
+            </app-review-list>
         </mat-tab>
     </mat-tab-group>
 </div>
 
 <ng-template #loading>
-    <p>Loading album details...</p>
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
 </ng-template>

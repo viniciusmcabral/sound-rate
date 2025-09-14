@@ -7,11 +7,12 @@
     font-size: 3rem;
     font-weight: 300;
     margin-bottom: 8px;
+    color: var(--primary-text);
 }
 
 .subheadline {
     font-size: 1.25rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--secondary-text);
     margin-bottom: 32px;
 }
 
@@ -26,4 +27,28 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     justify-content: center;
+}
+
+.info-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--secondary-text);
+    font-style: italic;
+
+    .info-icon {
+        font-size: 48px;
+        height: 48px;
+        width: 48px;
+        margin-bottom: 1rem;
+    }
+}
+
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem;
 }

@@ -1,9 +1,12 @@
-<a [routerLink]="['/album', album.id]" class="card-link">
-    <mat-card *ngIf="album" class="album-card">
-        <img mat-card-image [src]="albumCover" [alt]="album.name">
-        <mat-card-header>
-            <mat-card-title>{{ album.name }}</mat-card-title>
-            <mat-card-subtitle *ngIf="album.artists.length > 0">{{ album.artists[0].name }}</mat-card-subtitle>
-        </mat-card-header>
-    </mat-card>
-</a>
+<div class="album-card-container" (click)="openImagePreview($event)" title="Click to enlarge">
+    <img [src]="getAlbumCover()" [alt]="album.title" class="album-cover">
+    <div class="album-overlay">
+        <div class="overlay-content">
+            <h3 class="album-title">{{ album.title }}</h3>
+            <p class="album-artist">{{ album.artist?.name }}</p>
+        </div>
+        <a mat-icon-button class="details-button" [routerLink]="['/album', album.id]" title="View album details">
+            <mat-icon>arrow_forward</mat-icon>
+        </a>
+    </div>
+</div>

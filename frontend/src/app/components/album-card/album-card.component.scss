@@ -1,3 +1,71 @@
+:host {
+    display: block;
+    width: 220px;
+}
+
 .card-link {
     text-decoration: none;
+    color: inherit;
+    display: block;
+    outline: none;
+    height: 100%;
+}
+
+.album-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--surface-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+
+    .card-link:hover & {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    }
+}
+
+.album-cover-container {
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.album-cover {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+
+    .card-link:hover & {
+        transform: scale(1.05);
+    }
+}
+
+.album-info {
+    padding: 16px;
+    flex-grow: 1;
+
+    .album-title,
+    .album-artist {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .album-title {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 4px;
+        color: var(--primary-text);
+    }
+
+    .album-artist {
+        font-size: 0.85rem;
+        color: var(--secondary-text);
+    }
 }
