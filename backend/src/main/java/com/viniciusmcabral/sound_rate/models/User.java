@@ -39,6 +39,10 @@ public class User implements UserDetails {
 	@Column(nullable = false)
 	private String password;
 
+	private String avatarUrl;
+
+	private boolean active = true;
+
 	@Column(updatable = false, nullable = false)
 	private LocalDateTime createdAt;
 
@@ -57,6 +61,22 @@ public class User implements UserDetails {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getAvatarUrl() {
+		return avatarUrl;
+	}
+
+	public void setAvatarUrl(String avatarUrl) {
+		this.avatarUrl = avatarUrl;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public String getEmail() {
@@ -136,7 +156,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "User{" + "id=" + id + ", username='" + username + '\'' + ", email='" + email + '\'' +
-				", createdAt=" + createdAt + '}';
+		return "User{" + "id=" + id + ", username='" + username + '\'' + ", email='" + email + '\'' + ", createdAt="
+				+ createdAt + '}';
 	}
 }

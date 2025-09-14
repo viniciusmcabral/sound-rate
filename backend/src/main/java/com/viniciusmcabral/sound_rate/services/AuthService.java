@@ -5,8 +5,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import com.viniciusmcabral.sound_rate.dtos.request.RegisterUserDTO;
+import org.springframework.transaction.annotation.Transactional;
+import com.viniciusmcabral.sound_rate.dtos.request.RegisterRequestDTO;
+import com.viniciusmcabral.sound_rate.dtos.response.AuthResponseDTO;
+import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.models.User;
 import com.viniciusmcabral.sound_rate.repositories.UserRepository;
 
@@ -15,30 +17,37 @@ public class AuthService implements UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	
-	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+	private final TokenService tokenService;
+
+	public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, TokenService tokenService) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.tokenService = tokenService;
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-		return userRepository.findByUsernameOrEmail(login, login)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found with identifier: " + login));
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return userRepository.findByLoginAndActiveTrue(username).orElseThrow(() -> new UsernameNotFoundException("User not found or is inactive with identifier: " + username));
 	}
+
+	@Transactional
+	public AuthResponseDTO registerUser(RegisterRequestDTO data) {
+		if (userRepository.findByUsername(data.username()).isPresent()) 
+			throw new IllegalStateException("Username already exists");
 	
-	public User registerUser(RegisterUserDTO registerDTO) {
-        if (userRepository.findByUsername(registerDTO.username()).isPresent()) {
-            throw new IllegalStateException("Username already taken");
-        }
+		if (userRepository.findByEmail(data.email()).isPresent()) 
+			throw new IllegalStateException("Email already in use");
 
-        if (userRepository.findByEmail(registerDTO.email()).isPresent()) {
-            throw new IllegalStateException("Email already registered");
-        }
+		User newUser = new User(data.username(), data.email(), passwordEncoder.encode(data.password()));
 
-        String hashedPassword = passwordEncoder.encode(registerDTO.password());
-        User newUser = new User(registerDTO.username(), registerDTO.email(), hashedPassword);
+		String avatarUrl = "https://api.dicebear.com/8.x/initials/svg?seed=" + newUser.getUsername();
+		newUser.setAvatarUrl(avatarUrl);
 
-        return userRepository.save(newUser);
-    }
+		userRepository.save(newUser);
+
+		String token = tokenService.generateToken(newUser);
+		UserDTO userDTO = new UserDTO(newUser.getId(), newUser.getUsername(), newUser.getAvatarUrl());
+
+		return new AuthResponseDTO(token, userDTO);
+	}
 }
