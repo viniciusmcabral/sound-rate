@@ -3,6 +3,7 @@ package com.viniciusmcabral.sound_rate.controllers;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +42,12 @@ public class RatingController {
 	}
 
 	@DeleteMapping
-	public ResponseEntity<Void> deleteRating(@RequestParam(required = false) String albumId, @RequestParam(required = false) String trackId) {
+	public ResponseEntity<Void> deleteRating(@RequestParam(required = false) String albumId,
+			@RequestParam(required = false) String trackId) {
+		if (!StringUtils.hasText(albumId) && !StringUtils.hasText(trackId)) {
+			throw new IllegalArgumentException("You must provide either an albumId or a trackId.");
+		}
+
 		ratingService.deleteRating(albumId, trackId);
 		return ResponseEntity.noContent().build();
 	}

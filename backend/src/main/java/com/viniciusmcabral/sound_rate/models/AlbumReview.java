@@ -19,6 +19,9 @@ public class AlbumReview {
 	@Column(nullable = false, columnDefinition = "TEXT")
 	private String text;
 
+	@Column(nullable = false)
+	private Double rating;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	private User user;
@@ -31,10 +34,11 @@ public class AlbumReview {
 	public AlbumReview() {
 	}
 
-	public AlbumReview(String albumId, String text, User user) {
+	public AlbumReview(String albumId, String text, User user, Double rating) {
 		this.albumId = albumId;
 		this.text = text;
 		this.user = user;
+		this.rating = rating;
 	}
 
 	@PrePersist
@@ -69,6 +73,14 @@ public class AlbumReview {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public Double getRating() {
+		return rating;
+	}
+
+	public void setRating(Double rating) {
+		this.rating = rating;
 	}
 
 	public User getUser() {
@@ -112,8 +124,7 @@ public class AlbumReview {
 
 	@Override
 	public String toString() {
-		return "AlbumReview{" + "id=" + id + ", albumId='" + albumId + '\'' + ", text='"
-				+ (text != null ? text.substring(0, Math.min(text.length(), 50)) + "..." : "null") + '\'' + ", userId="
-				+ (user != null ? user.getId() : null) + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + '}';
+		return "AlbumReview [id=" + id + ", albumId=" + albumId + ", text=" + text + ", rating=" + rating + ", user="
+				+ user + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 }

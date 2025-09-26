@@ -17,7 +17,7 @@ public class TrackRating {
 	@Column(nullable = false)
 	private String trackId;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Double rating;
 
 	@ManyToOne(fetch = FetchType.LAZY)

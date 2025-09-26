@@ -1,26 +1,27 @@
 <mat-toolbar class="navbar">
-  <div class="nav-center">
+  <div class="nav-container">
     <a routerLink="/" class="app-title">SoundRate</a>
 
-    <ng-container *ngIf="!(currentUser$ | async)">
-      <a mat-button class="nav-link" routerLink="/login">Login</a>
-      <a mat-button class="nav-link" routerLink="/register">Register</a>
-    </ng-container>
+    <div class="nav-actions">
+      <ng-container *ngIf="!(currentUser$ | async)">
+        <a mat-button class="nav-link" routerLink="/login">Login</a>
+        <a mat-button class="nav-link register-btn" routerLink="/register">Register</a>
+      </ng-container>
 
-    <ng-container *ngIf="currentUser$ | async as user">
-      <a mat-button class="nav-link profile-link" [routerLink]="['/user', user.username]">
-        <img [src]="user.avatarUrl" alt="Avatar de {{ user.username }}" class="toolbar-avatar">
-        <span>{{ user.username }}</span> </a>
-
-      <a mat-icon-button routerLink="/settings" title="Configurações">
-        <mat-icon>settings</mat-icon>
-      </a>
-
-      <button mat-button class="nav-link" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>Logout</span>
-      </button>
-    </ng-container>
+      <ng-container *ngIf="currentUser$ | async as user">
+        <a mat-button class="nav-link profile-link" [routerLink]="['/user', user.username]">
+          <img [src]="user.avatarUrl" alt="Avatar of {{ user.username }}" class="toolbar-avatar">
+          <span class="username-label">{{ user.username }}</span>
+        </a>
+        <a mat-icon-button routerLink="/settings" class="nav-icon-link">
+          <mat-icon>settings</mat-icon>
+        </a>
+        <button mat-button class="nav-link logout-button" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span class="logout-label">Logout</span>
+        </button>
+      </ng-container>
+    </div>
   </div>
 </mat-toolbar>
 
@@ -28,6 +29,31 @@
   <router-outlet></router-outlet>
 </main>
 
-<mat-toolbar class="footer" color="primary">
-  <span>© 2025 SoundRate</span>
-</mat-toolbar>
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section about">
+      <h2 class="footer-logo">SoundRate</h2>
+      <p>
+        A web site for reviewing and discovering new music.
+        Project created for portfolio purposes.
+      </p>
+    </div>
+
+    <div class="footer-section developer">
+      <h3>Made by</h3>
+      <ul>
+        <li><a href="https://github.com/viniciusmcabral/sound-rate.git" target="_blank"><i
+              class="fab fa-github"></i>Code on GitHub</a></li>
+        <li><a href="#" target="_blank"> <i class="fas fa-briefcase"></i> Portfolio</a></li>
+        <li><a href="https://www.instagram.com/vinicabr4l/" target="_blank"> <i class="fab fa-instagram"></i>
+            Instagram</a></li>
+        <li><a href="https://wa.me/5571999259526" target="_blank"> <i class="fab fa-whatsapp"></i> WhatsApp</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2025 SoundRate</span>
+    <span>Data provided by Deezer API</span>
+  </div>
+</footer>

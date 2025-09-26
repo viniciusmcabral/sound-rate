@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { AlbumReview } from '../../models/review.model';
+import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
 import { User } from '../../models/user.model';
+import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +13,7 @@ import { ApiService } from '../../services/api.service';
 @Component({
   selector: 'app-review-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatMenuModule],
+  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatMenuModule, RouterLink, StarRatingComponent],
   templateUrl: './review-list.component.html',
   styleUrl: './review-list.component.scss'
 })
@@ -20,6 +22,7 @@ export class ReviewListComponent {
   @Input() currentUser: User | null = null;
   @Output() edit = new EventEmitter<AlbumReview>();
   @Output() delete = new EventEmitter<number>();
+  @Output() ratingChanged = new EventEmitter<number | null>();
 
   constructor(private apiService: ApiService) { }
 
@@ -27,8 +30,12 @@ export class ReviewListComponent {
     return this.currentUser?.id === review.author.id;
   }
 
+  onRatingChange(newRating: number | null): void {
+    this.ratingChanged.emit(newRating);
+  }
+
   toggleLike(review: AlbumReview): void {
-    if (!this.currentUser) return; 
+    if (!this.currentUser) return;
 
     const isCurrentlyLiked = review.isLikedByCurrentUser;
     const apiCall = isCurrentlyLiked ? this.apiService.unlikeReview(review.id) : this.apiService.likeReview(review.id);

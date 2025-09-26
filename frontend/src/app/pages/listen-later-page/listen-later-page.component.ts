@@ -14,7 +14,6 @@ import { AlbumCardComponent } from '../../components/album-card/album-card.compo
   standalone: true,
   imports: [CommonModule, MatPaginatorModule, MatProgressSpinnerModule, AlbumCardComponent],
   templateUrl: './listen-later-page.component.html',
-  styleUrl: './listen-later-page.component.scss'
 })
 export class ListenLaterPageComponent implements OnInit {
   private albumsSubject = new BehaviorSubject<DeezerAlbum[]>([]);

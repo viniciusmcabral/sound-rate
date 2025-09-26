@@ -26,7 +26,7 @@ public class AlbumRating {
 	@Column(nullable = false)
 	private String albumId;
 
-	@Column(nullable = false)
+	@Column(nullable = true)
 	private Double rating;
 
 	@Column(updatable = false)

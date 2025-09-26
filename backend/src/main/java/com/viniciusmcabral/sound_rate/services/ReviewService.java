@@ -35,7 +35,7 @@ public class ReviewService {
 			throw new IllegalStateException("User has already reviewed this album.");
 		});
 		
-		AlbumReview newReview = new AlbumReview(reviewDTO.albumId(), reviewDTO.text(), currentUser);
+		AlbumReview newReview = new AlbumReview(reviewDTO.albumId(), reviewDTO.text(), currentUser, reviewDTO.rating());
 		AlbumReview savedReview = albumReviewRepository.save(newReview);
 		
 		return convertToDto(savedReview);
@@ -44,58 +44,65 @@ public class ReviewService {
 	@Transactional
 	public AlbumReviewDTO updateReview(Long reviewId, ReviewRequestDTO reviewDTO) {
 		User currentUser = getCurrentUser();
-		AlbumReview existingReview = albumReviewRepository.findById(reviewId).orElseThrow(() -> new NoSuchElementException("Review not found with id: " + reviewId));
-		
+		AlbumReview existingReview = albumReviewRepository.findById(reviewId)
+				.orElseThrow(() -> new NoSuchElementException("Review not found with id: " + reviewId));
+
 		if (!existingReview.getUser().getId().equals(currentUser.getId()))
 			throw new AccessDeniedException("User is not the author of this review.");
-		
+
 		existingReview.setText(reviewDTO.text());
+		existingReview.setRating(reviewDTO.rating());
 		AlbumReview updatedReview = albumReviewRepository.save(existingReview);
-		
+
 		return convertToDto(updatedReview);
 	}
 
 	@Transactional
 	public void deleteReview(Long reviewId) {
 		User currentUser = getCurrentUser();
-		AlbumReview reviewToDelete = albumReviewRepository.findById(reviewId).orElseThrow(() -> new NoSuchElementException("Review not found with id: " + reviewId));
-		
-		if (!reviewToDelete.getUser().getId().equals(currentUser.getId())) 
+		AlbumReview reviewToDelete = albumReviewRepository.findById(reviewId)
+				.orElseThrow(() -> new NoSuchElementException("Review not found with id: " + reviewId));
+
+		if (!reviewToDelete.getUser().getId().equals(currentUser.getId()))
 			throw new AccessDeniedException("User is not the author of this review.");
-		
+
 		albumReviewRepository.delete(reviewToDelete);
 	}
 
 	public Page<AlbumReviewDTO> getReviewsForAlbum(String albumId, Pageable pageable) {
-		Page<AlbumReview> reviewPage = albumReviewRepository.findByAlbumId(albumId, pageable);
+		Page<AlbumReview> reviewPage = albumReviewRepository.findActiveReviewsByAlbumId(albumId, pageable);
 		return reviewPage.map(this::convertToDto);
 	}
 
 	private User getCurrentUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		if (principal instanceof User) 
+
+		if (principal instanceof User)
 			return (User) principal;
-		
+
 		throw new IllegalStateException("Could not retrieve authenticated user.");
 	}
 
 	private User getCurrentUserOrNull() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) 
+
+		if (authentication == null || !authentication.isAuthenticated()
+				|| "anonymousUser".equals(authentication.getPrincipal()))
 			return null;
-		
+
 		return (User) authentication.getPrincipal();
 	}
 
 	private AlbumReviewDTO convertToDto(AlbumReview review) {
 		User currentUser = getCurrentUserOrNull();
 		long likesCount = reviewLikeRepository.countByAlbumReview(review);
-		boolean isLiked = (currentUser != null) && reviewLikeRepository.findByUserAndAlbumReview(currentUser, review).isPresent();
-		
-		UserDTO author = new UserDTO(review.getUser().getId(), review.getUser().getUsername(),review.getUser().getAvatarUrl());
-		
-		return new AlbumReviewDTO(review.getId(), review.getText(), review.getCreatedAt(), author, likesCount, isLiked);
+		boolean isLiked = (currentUser != null)
+				&& reviewLikeRepository.findByUserAndAlbumReview(currentUser, review).isPresent();
+
+		UserDTO author = new UserDTO(review.getUser().getId(), review.getUser().getUsername(),
+				review.getUser().getAvatarUrl());
+
+		return new AlbumReviewDTO(review.getId(), review.getText(), review.getRating(), review.getCreatedAt(), author,
+				likesCount, isLiked);
 	}
 }

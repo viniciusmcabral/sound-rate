@@ -5,15 +5,16 @@
     padding-top: 1rem;
 }
 
+.review-header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    margin: 0 16px;
+}
+
 .review-card {
     background-color: var(--background-dark);
-    ;
-
-    mat-card-header {
-        .spacer {
-            flex: 1 1 auto;
-        }
-    }
 
     mat-card-content {
         p {
@@ -21,6 +22,26 @@
             word-wrap: break-word;
             padding: 0 16px 16px 16px;
         }
+    }
+
+    mat-card-title a {
+        text-decoration: none;
+        color: var(--secondary-text);
+    }
+
+    mat-card-title a:hover {
+        text-decoration: underline;
+        color: var(--accent-color);
+    }
+}
+
+.user-link {
+    color: var(--primary-text);
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
     }
 }
 
@@ -35,14 +56,14 @@
     display: flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0 16px 8px; 
+    padding: 0 16px 8px;
 
     button {
-        color: var(--secondary-text); 
+        color: var(--secondary-text);
     }
 
     button.liked {
-        color: #e91e63;
+        color: var(--warn-color);
     }
 
     span {

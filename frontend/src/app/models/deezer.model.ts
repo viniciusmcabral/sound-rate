@@ -6,10 +6,23 @@ export interface DeezerArtist {
   tracklist: string;
 }
 
-export interface DeezerContributor {
+export interface DeezerArtistDetails {
   id: number;
   name: string;
-  role: string;
+  link: string;
+  picture_xl: string; 
+  nb_album: number; 
+  nb_fan: number;
+}
+
+export interface DeezerSimpleAlbum {
+  id: number;
+  title: string;
+  cover: string;
+  cover_small: string;
+  cover_medium: string;
+  cover_big: string;
+  cover_xl: string;
 }
 
 export interface DeezerTrack {
@@ -18,7 +31,7 @@ export interface DeezerTrack {
   duration: number;
   preview: string | null;
   artist: DeezerArtist;
-  contributors: DeezerContributor[];
+  album: DeezerSimpleAlbum;
 }
 
 export interface DeezerAlbum {
@@ -35,6 +48,5 @@ export interface DeezerAlbum {
   tracks: {
     data: DeezerTrack[];
   };
-  contributors: DeezerContributor[];
 }
 

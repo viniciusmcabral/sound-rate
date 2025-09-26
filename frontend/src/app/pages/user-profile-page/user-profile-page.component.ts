@@ -12,12 +12,14 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ReviewDisplayDialogComponent } from '../../components/review-display-dialog/review-display-dialog.component';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { AlbumCardComponent } from '../../components/album-card/album-card.component';
 import { StarRatingComponent } from '../../components/star-rating/star-rating.component';
+import { UserListComponent } from '../../components/user-list/user-list.component';
 
 @Component({
   selector: 'app-user-profile-page',
@@ -46,14 +48,14 @@ export class UserProfilePageComponent implements OnInit {
   likedAlbumsSubject = new BehaviorSubject<DeezerAlbum[]>([]);
   likedAlbums$ = this.likedAlbumsSubject.asObservable();
   totalLikedAlbums = 0;
-  likedAlbumsPageSize = 18;
+  likedAlbumsPageSize = 12;
   currentLikedAlbumsPage = 0;
   isLoadingLikedAlbums = true;
 
   listenLaterSubject = new BehaviorSubject<DeezerAlbum[]>([]);
   listenLater$ = this.listenLaterSubject.asObservable();
   totalListenLater = 0;
-  listenLaterPageSize = 18;
+  listenLaterPageSize = 12;
   currentListenLaterPage = 0;
   isLoadingListenLater = true;
 
@@ -61,7 +63,8 @@ export class UserProfilePageComponent implements OnInit {
     private route: ActivatedRoute,
     private apiService: ApiService,
     public authService: AuthService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -105,6 +108,64 @@ export class UserProfilePageComponent implements OnInit {
     });
   }
 
+  unlikeAlbum(albumId: number, event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+    const currentLikedAlbums = this.likedAlbumsSubject.getValue();
+    const updatedAlbums = currentLikedAlbums.filter(album => album.id !== albumId);
+    this.likedAlbumsSubject.next(updatedAlbums);
+    this.totalLikedAlbums--;
+
+    this.apiService.unlikeAlbum(albumId.toString()).subscribe({
+      next: () => {
+        this.snackBar.open('Album removed from likes.', 'Close', { duration: 2000 });
+      },
+      error: () => {
+        this.likedAlbumsSubject.next(currentLikedAlbums);
+        this.totalLikedAlbums++;
+        this.snackBar.open('Error removing like. Please try again.', 'Close', { duration: 3000 });
+      }
+    });
+  }
+
+  removeFromListenLater(albumId: number, event: MouseEvent): void {
+    event.stopPropagation();
+    event.preventDefault();
+
+    const currentList = this.listenLaterSubject.getValue();
+    const updatedList = currentList.filter(album => album.id !== albumId);
+    this.listenLaterSubject.next(updatedList);
+    this.totalListenLater--;
+
+    if (updatedList.length === 0 && this.currentListenLaterPage > 0) {
+      this.currentListenLaterPage--;
+      this.loadListenLater();
+    }
+
+    this.apiService.removeFromListenLater(albumId.toString()).subscribe({
+      next: () => {
+        this.snackBar.open('Album removed from Listen Later list.', 'Close', { duration: 2000 });
+      },
+      error: () => {
+        this.listenLaterSubject.next(currentList);
+        this.totalListenLater++;
+        this.snackBar.open('Error removing album. Please try again.', 'Close', { duration: 3000 });
+      }
+    });
+  }
+
+  openFollowListDialog(listType: 'followers' | 'following'): void {
+    this.dialog.open(UserListComponent, {
+      width: '400px',
+      height: '60vh',
+      panelClass: 'user-list-dialog',
+      data: {
+        username: this.username,
+        listType: listType
+      }
+    });
+  }
+
   loadRatedAlbums(): void {
     this.isLoadingRatings = true;
     this.apiService.getRatedAlbums(this.username, this.currentRatingsPage, this.ratingsPageSize)
@@ -140,6 +201,7 @@ export class UserProfilePageComponent implements OnInit {
 
     this.dialog.open(ReviewDisplayDialogComponent, {
       width: '600px',
+      panelClass: 'review-dialog-container',
       data: {
         albumTitle: rating.album.title,
         reviewText: rating.reviewText

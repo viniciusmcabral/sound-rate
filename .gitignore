@@ -1,41 +1,68 @@
-# Ignore environment files with sensitive data
+# .env
 .env
 
-# ==================================
-# Java / Maven Backend Rules
-# ==================================
+# Logs and temps
+*.log
+/tmp
+.DS_Store
+Thumbs.db
 
-# Compiled class file
-backend/*.class
 
-# Log files
-backend/*.log
+# Angular build
+/node_modules
+/dist
+/out-tsc
+/bazel-out
 
-# BlueJ files
-backend/*.ctxt
+/.angular/cache
 
-# Mobile Tools for Java (J2ME)
-backend/bin/
-backend/preverified/
+npm-debug.log
+yarn-error.log
+/libpeerconnection.log
+testem.log
 
-# Package Files #
+/typings
+
+
+# Backend Maven
+backend/target/
+
 backend/*.jar
 backend/*.war
 backend/*.ear
+backend/*.class
+
+# Maven temp
 backend/pom.xml.tag
 backend/pom.xml.releaseBackup
 backend/pom.xml.versionsBackup
 backend/release.properties
 backend/dependency-reduced-pom.xml
 
-# Maven build output
-backend/target/
+backend/*.ctxt
+backend/bin/
+backend/preverified/
 
-# IDE configuration files
-backend/.idea/
-backend/*.iml
-backend/*.ipr
-backend/*.iws
-backend/.project
-backend/.classpath
-backend/.settings/
+# IDEs
+.idea/
+*.iml
+*.ipr
+*.iws
+
+.project
+.classpath
+.settings/
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/
+
+.c9/
+*.launch
+*.sublime-workspace
+.sass-cache/
+/connect.lock
+/coverage

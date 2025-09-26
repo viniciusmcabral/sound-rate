@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validatio
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { User } from '../../models/user.model';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ConfirmationDialogComponent } from '../../components/confirmation-dialog/confirmation-dialog.component';
 
 export const passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const password = control.get('newPassword');
@@ -38,7 +40,8 @@ export class SettingsPageComponent implements OnInit {
     private fb: FormBuilder,
     private apiService: ApiService,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -85,15 +88,25 @@ export class SettingsPageComponent implements OnInit {
   }
 
   deleteAccount(): void {
-    if (confirm('Are you absolutely sure you want to delete your account? This action cannot be undone')) {
-      this.apiService.deleteCurrentUser().subscribe({
-        next: () => {
-          this.snackBar.open('Account deleted successfully. We will miss you!', 'Close', { duration: 5000 });
-          this.authService.logout();
-        },
-        error: (err) => this.snackBar.open('An error occurred while deleting your account.', 'Close', { duration: 5000 })
-      });
-    }
+
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Delete Account?',
+        message: 'Are you sure you want to delete this account? This action cannot be undone'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.apiService.deleteCurrentUser().subscribe({
+          next: () => {
+            this.snackBar.open('Account deleted successfully. We will miss you!', 'Close', { duration: 5000 });
+            this.authService.logout();
+          },
+          error: (err) => this.snackBar.open('An error occurred while deleting your account.', 'Close', { duration: 5000 })
+        });
+      }
+    });
   }
 
   onFileSelected(event: Event): void {

@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class StarRatingComponent {
   @Input() rating: number = 0;
   @Input() readonly: boolean = false;
-  @Output() ratingChange = new EventEmitter<number>();
+  @Output() ratingChange = new EventEmitter<number | null>();
 
   maxRating: number = 5;
   hoverRating: number = 0;
@@ -28,9 +28,11 @@ export class StarRatingComponent {
     if (ratingToShow >= star) {
       return 'star';
     }
+
     if (ratingToShow >= star - 0.5) {
       return 'star_half';
     }
+
     return 'star_border';
   }
 
@@ -41,7 +43,12 @@ export class StarRatingComponent {
     const rect = target.getBoundingClientRect();
     const isHalf = (event.clientX - rect.left) < (rect.width / 2);
     const newRating = isHalf ? star - 0.5 : star;
-    this.ratingChange.emit(newRating);
+
+    if (newRating === this.rating) {
+      this.ratingChange.emit(null);
+    } else {
+      this.ratingChange.emit(newRating);
+    }
   }
 
   setHoverRating(star: number, event: MouseEvent): void {

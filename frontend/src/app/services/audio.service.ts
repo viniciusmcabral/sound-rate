@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { DeezerTrack } from '../models/deezer.model';
 
 @Injectable({
     providedIn: 'root'
@@ -7,40 +8,59 @@ import { BehaviorSubject } from 'rxjs';
 export class AudioService {
     private audio = new Audio();
     private isPlayingSubject = new BehaviorSubject<boolean>(false);
-    private currentTrackUrlSubject = new BehaviorSubject<string | null>(null);
+    private currentTrackSubject = new BehaviorSubject<DeezerTrack | null>(null);
+    private currentTimeSubject = new BehaviorSubject<number>(0);
+
     public isPlaying$ = this.isPlayingSubject.asObservable();
-    public currentTrackUrl$ = this.currentTrackUrlSubject.asObservable();
+    public currentTrack$ = this.currentTrackSubject.asObservable();
+    public currentTime$ = this.currentTimeSubject.asObservable();
 
     constructor() {
         this.audio.addEventListener('playing', () => this.isPlayingSubject.next(true));
         this.audio.addEventListener('pause', () => this.isPlayingSubject.next(false));
+
+        this.audio.addEventListener('timeupdate', () => {
+            this.currentTimeSubject.next(this.audio.currentTime);
+        });
+
         this.audio.addEventListener('ended', () => {
             this.isPlayingSubject.next(false);
-            this.currentTrackUrlSubject.next(null);
+            this.currentTrackSubject.next(null);
+            this.currentTimeSubject.next(0);
         });
     }
 
-    togglePlay(trackUrl: string | null): void {
-        if (!trackUrl) {
-            console.warn('Attempt to play a null previous URL');
-            return;
-        }
+    togglePlay(track: DeezerTrack): void {
+        if (!track.preview) return;
 
-        if (this.currentTrackUrlSubject.value === trackUrl && !this.audio.paused) {
-            this.audio.pause();
+        const isSameTrack = this.currentTrackSubject.value?.id === track.id;
+
+        if (isSameTrack) {
+            if (this.audio.paused) {
+                this.audio.play();
+            } else {
+                this.audio.pause();
+            }
         } else {
-            console.log('Playing preview:', trackUrl);
-            this.audio.src = trackUrl;
-            this.currentTrackUrlSubject.next(trackUrl);
+            this.currentTimeSubject.next(0);
+            this.audio.src = track.preview;
+            this.currentTrackSubject.next(track);
 
             const playPromise = this.audio.play();
             if (playPromise !== undefined) {
                 playPromise.catch(error => {
-                    console.warn('Audio playback error caught:', error);
+                    console.warn('Audio play error caught:', error);
                     this.isPlayingSubject.next(false);
-                    this.currentTrackUrlSubject.next(null);
+                    this.currentTrackSubject.next(null);
                 });
             }
         }
+    }
+
+    stop(): void {
+        this.audio.pause();
+        this.audio.src = '';
+        this.currentTrackSubject.next(null);
+        this.currentTimeSubject.next(0);
     }
 }

@@ -41,6 +41,7 @@ public class User implements UserDetails {
 
 	private String avatarUrl;
 
+	@Column(nullable = false)
 	private boolean active = true;
 
 	@Column(updatable = false, nullable = false)
@@ -136,7 +137,7 @@ public class User implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.active;
 	}
 
 	@Override

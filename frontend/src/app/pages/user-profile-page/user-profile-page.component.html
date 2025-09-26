@@ -1,9 +1,9 @@
 <div class="profile-container" *ngIf="userProfile$ | async as profile; else loading">
 
   <header class="profile-header">
-    <img [src]="profile.user?.avatarUrl" alt="Avatar of {{ profile.user?.username }}" class="profile-avatar">
+    <img [src]="profile.user.avatarUrl" alt="Avatar of {{ profile.user.username }}" class="profile-avatar">
     <div class="profile-info">
-      <h1>{{ profile.user?.username }}</h1>
+      <h1>{{ profile.user.username }}</h1>
       <div class="profile-actions" *ngIf="authService.isAuthenticated()">
         <a *ngIf="isOwnProfile" mat-stroked-button routerLink="/settings">
           <mat-icon>edit</mat-icon>
@@ -17,24 +17,30 @@
     </div>
 
     <div class="profile-stats">
+
+      <div class="stat-item clickable" (click)="openFollowListDialog('followers')">
+        <span class="stat-value">{{ profile.followersCount }}</span>
+        <span class="stat-label">Followers</span>
+      </div>
+
+      <div class="stat-item clickable" (click)="openFollowListDialog('following')">
+        <span class="stat-value">{{ profile.followingCount }}</span>
+        <span class="stat-label">Following</span>
+      </div>
+
       <div class="stat-item">
-        <span class="stat-value">{{ profile.totalAlbumRatings + profile.totalTrackRatings }}</span>
-        <span class="stat-label">Ratings</span>
+        <span class="stat-value">{{ profile.totalAlbumRatings }}</span>
+        <span class="stat-label">Albums rated</span>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-value">{{ profile.totalTrackRatings }}</span>
+        <span class="stat-label">Tracks rated</span>
       </div>
 
       <div class="stat-item">
         <span class="stat-value">{{ profile.totalReviews }}</span>
         <span class="stat-label">Reviews</span>
-      </div>
-
-      <div class="stat-item">
-        <span class="stat-value">{{ profile.followersCount }}</span>
-        <span class="stat-label">Followers</span>
-      </div>
-
-      <div class="stat-item">
-        <span class="stat-value">{{ profile.followingCount }}</span>
-        <span class="stat-label">Following</span>
       </div>
     </div>
   </header>
@@ -60,9 +66,9 @@
               </div>
             </div>
           </div>
-          <p *ngIf="!(ratings$ | async)?.length" class="no-content-message">This user has no ratings yet.</p>
-          <mat-paginator *ngIf="totalRatings > ratingsPageSize" [length]="totalRatings" [pageSize]="ratingsPageSize"
-            [pageIndex]="currentRatingsPage" (page)="onRatingsPageChange($event)">
+          <p *ngIf="!(ratings$ | async)?.length" class="no-content-message">This user has no ratings yet</p>
+          <mat-paginator class="custom-paginator" *ngIf="totalRatings > ratingsPageSize" [length]="totalRatings"
+            [pageSize]="ratingsPageSize" [pageIndex]="currentRatingsPage" (page)="onRatingsPageChange($event)">
           </mat-paginator>
         </div>
       </div>
@@ -76,11 +82,21 @@
 
         <div *ngIf="!isLoadingLikedAlbums">
           <div class="album-grid" *ngIf="(likedAlbums$ | async) as likedAlbums">
-            <app-album-card *ngFor="let album of likedAlbums" [album]="album"></app-album-card>
+            <div *ngFor="let album of likedAlbums" class="album-card-container">
+              <app-album-card [album]="album"></app-album-card>
+              <button *ngIf="isOwnProfile" mat-icon-button class="like-button" title="Remove from likes"
+                (click)="unlikeAlbum(album.id, $event)">
+                <mat-icon>favorite</mat-icon>
+              </button>
+            </div>
           </div>
-          <p *ngIf="!(likedAlbums$ | async)?.length" class="no-content-message">This user has no liked albums yet.</p>
-          <mat-paginator *ngIf="totalLikedAlbums > likedAlbumsPageSize" [length]="totalLikedAlbums"
-            [pageSize]="likedAlbumsPageSize" [pageIndex]="currentLikedAlbumsPage"
+
+          <p *ngIf="totalLikedAlbums === 0" class="no-content-message">
+            This user has no liked albums yet
+          </p>
+
+          <mat-paginator class="custom-paginator" *ngIf="totalLikedAlbums > likedAlbumsPageSize"
+            [length]="totalLikedAlbums" [pageSize]="likedAlbumsPageSize" [pageIndex]="currentLikedAlbumsPage"
             (page)="onLikedAlbumsPageChange($event)">
           </mat-paginator>
         </div>
@@ -95,30 +111,28 @@
 
         <div *ngIf="!isLoadingListenLater">
           <div class="album-grid" *ngIf="(listenLater$ | async) as listenLaterAlbums">
-            <app-album-card *ngFor="let album of listenLaterAlbums" [album]="album"></app-album-card>
+
+            <div *ngFor="let album of listenLaterAlbums" class="album-card-container">
+              <app-album-card [album]="album"></app-album-card>
+
+              <button mat-icon-button class="listen-later-button" title="Remove from Listen Later"
+                (click)="removeFromListenLater(album.id, $event)">
+                <mat-icon>bookmark_remove</mat-icon>
+              </button>
+            </div>
           </div>
-          <p *ngIf="!(listenLater$ | async)?.length" class="no-content-message">
-            Your Listen Later list is empty.
+
+          <p *ngIf="totalListenLater === 0" class="no-content-message">
+            You don't have albums on listen later list yet
           </p>
-          <mat-paginator *ngIf="totalListenLater > listenLaterPageSize" [length]="totalListenLater"
-            [pageSize]="listenLaterPageSize" [pageIndex]="currentListenLaterPage"
+
+          <mat-paginator class="custom-paginator" *ngIf="totalListenLater > listenLaterPageSize"
+            [length]="totalListenLater" [pageSize]="listenLaterPageSize" [pageIndex]="currentListenLaterPage"
             (page)="onListenLaterPageChange($event)">
           </mat-paginator>
         </div>
       </div>
     </mat-tab>
-
-    <mat-tab label="Following">
-      <div class="tab-content">
-        <p class="no-content-message">Coming Soon: A list of users that {{ profile.user?.username }} follows.</p>
-      </div>
-    </mat-tab>
-    <mat-tab label="Followers">
-      <div class="tab-content">
-        <p class="no-content-message">Coming Soon: A list of followers for {{ profile.user?.username }}.</p>
-      </div>
-    </mat-tab>
-
   </mat-tab-group>
 
 </div>

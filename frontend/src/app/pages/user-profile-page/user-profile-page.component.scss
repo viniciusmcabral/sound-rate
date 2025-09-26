@@ -59,41 +59,7 @@
     padding-top: 1.5rem;
 }
 
-.activity-feed {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.activity-item {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
-
-.activity-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex-grow: 1;
-    min-width: 0;
-
-    .review-text {
-        color: var(--secondary-text);
-        margin: 0;
-        white-space: pre-wrap;
-        word-wrap: break-word;
-    }
-
-    .activity-date {
-        font-size: 0.8rem;
-        color: var(--secondary-text);
-        opacity: 0.6;
-    }
-}
-
-.no-activity-message {
+.no-content-message {
     text-align: center;
     padding: 3rem;
     color: var(--secondary-text);
@@ -118,6 +84,61 @@
     margin-top: 1rem;
 }
 
+.stat-item.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+    }
+}
+
+.album-grid,
+.ratings-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+.rating-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rating-info {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.album-card-container {
+    position: relative;
+}
+
+.like-button,
+.listen-later-button {
+    position: absolute;
+    top: 8px;
+    right: 65px;
+    z-index: 10;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+}
+
+.like-button {
+    color: #f44336;
+}
+
+.listen-later-button {
+    background-color: black;
+}
 
 @media (max-width: 600px) {
     .profile-header {

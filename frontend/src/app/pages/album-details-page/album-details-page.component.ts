@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { Observable, BehaviorSubject, switchMap } from 'rxjs';
+import { BehaviorSubject, switchMap } from 'rxjs';
 import { AlbumDetails } from '../../models/album-details.model';
 import { ApiService } from '../../services/api.service';
 import { AuthService } from '../../services/auth.service';
 import { AlbumReview } from '../../models/review.model';
 import { AudioService } from '../../services/audio.service';
-import { DeezerTrack } from '../../models/deezer.model';
-import { CommonModule, NgClass, JsonPipe, DatePipe, DecimalPipe, SlicePipe } from '@angular/common';
+import { CommonModule, DecimalPipe, SlicePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +19,7 @@ import { StarRatingComponent } from '../../components/star-rating/star-rating.co
 import { ReviewDialogComponent } from '../../components/review-dialog/review-dialog.component';
 import { ReviewListComponent } from '../../components/review-list/review-list.component';
 import { FormatDurationPipe } from '../../pipes/format-duration.pipe';
+import { RatingRequest } from '../../models/rating.model';
 
 @Component({
   selector: 'app-album-details-page',
@@ -28,7 +28,7 @@ import { FormatDurationPipe } from '../../pipes/format-duration.pipe';
     CommonModule, RouterLink, MatCardModule, MatTabsModule, MatIconModule, MatListModule,
     StarRatingComponent, MatSnackBarModule, MatButtonModule, MatDialogModule,
     ReviewListComponent, MatProgressSpinnerModule, FormatDurationPipe,
-    NgClass, JsonPipe, DatePipe, DecimalPipe, SlicePipe
+    DecimalPipe, SlicePipe
   ],
   templateUrl: './album-details-page.component.html',
   styleUrl: './album-details-page.component.scss'
@@ -110,28 +110,95 @@ export class AlbumDetailsPageComponent implements OnInit {
     });
   }
 
-  onRatingChanged(newRating: number): void {
-    this.apiService.rateAlbumOrTrack({ albumId: this.albumId, rating: newRating }).subscribe({
-      next: () => {
-        this.snackBar.open('Your rating has been saved!', 'Close', { duration: 3000 });
-        this.loadAlbumDetails();
-      },
-      error: (err) => this.snackBar.open('Error saving your rating.', 'Close', { duration: 3000 })
+  onAlbumRatingChanged(newRating: number | null): void {
+    const currentDetails = this.albumDetailsSubject.getValue();
+    if (!currentDetails) return;
+
+    const oldRating = currentDetails.currentUserRating;
+
+    this.albumDetailsSubject.next({
+      ...currentDetails,
+      currentUserRating: newRating,
     });
+
+    if (newRating === null) {
+      this.apiService.deleteRating(this.albumId).subscribe({
+        next: () => {
+          this.snackBar.open('Rating removed successfully!', 'Close', { duration: 3000 });
+          this.loadAlbumDetails();
+        },
+        error: (err) => {
+          this.albumDetailsSubject.next({ ...currentDetails, currentUserRating: oldRating });
+          this.snackBar.open('Error removing your rating.', 'Close', { duration: 3000 });
+        }
+      });
+    } else {
+      const ratingDto: RatingRequest = { albumId: this.albumId, rating: newRating };
+      this.apiService.rateAlbumOrTrack(ratingDto).subscribe({
+        next: () => {
+          this.snackBar.open('Your rating has been saved!', 'Close', { duration: 3000 });
+          this.loadAlbumDetails();
+        },
+        error: (err) => {
+          this.albumDetailsSubject.next({ ...currentDetails, currentUserRating: oldRating });
+          this.snackBar.open('Error saving your rating.', 'Close', { duration: 3000 });
+        }
+      });
+    }
+  }
+
+  onTrackRatingChanged(newRating: number | null, trackId: string): void {
+    const currentDetails = this.albumDetailsSubject.getValue();
+    if (!currentDetails) return;
+
+    if (newRating === null) {
+      this.apiService.deleteRating(undefined, trackId).subscribe({
+        next: () => {
+          this.snackBar.open('Track rating removed!', 'Close', { duration: 2000 });
+          this.loadAlbumDetails();
+        },
+        error: (err) => {
+          this.snackBar.open('Error removing track rating.', 'Close', { duration: 3000 });
+        }
+      });
+    } else {
+      this.apiService.rateAlbumOrTrack({ albumId: this.albumId, trackId: trackId, rating: newRating }).subscribe({
+        next: () => {
+          this.snackBar.open('Track rating saved!', 'Close', { duration: 2000 });
+          this.loadAlbumDetails();
+        },
+        error: (err) => this.snackBar.open('Error saving track rating.', 'Close', { duration: 3000 })
+      });
+    }
   }
 
   openReviewDialog(reviewToEdit?: AlbumReview): void {
+    const currentDetails = this.albumDetailsSubject.getValue();
+    if (!currentDetails) return;
+
+    if (!currentDetails.currentUserRating || currentDetails.currentUserRating === 0) {
+      this.snackBar.open('You must rate the album before writing a review.', 'Close', { duration: 3000 });
+      return;
+    }
+
     const dialogRef = this.dialog.open(ReviewDialogComponent, {
       width: '600px',
-      data: { existingText: reviewToEdit?.text }
+      panelClass: 'review-dialog-container',
+      data: {
+        existingText: reviewToEdit?.text,
+      }
     });
 
-    dialogRef.afterClosed().subscribe(resultText => {
-      if (resultText !== undefined) {
-        const request = { albumId: this.albumId, text: resultText };
-        const apiCall = reviewToEdit
-          ? this.apiService.updateReview(reviewToEdit.id, request)
-          : this.apiService.createReview(request);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.text !== undefined) {
+
+        const request = {
+          albumId: this.albumId,
+          text: result.text,
+          rating: currentDetails.currentUserRating!
+        };
+
+        const apiCall = reviewToEdit ? this.apiService.updateReview(reviewToEdit.id, request) : this.apiService.createReview(request);
 
         apiCall.subscribe({
           next: () => {
@@ -145,15 +212,13 @@ export class AlbumDetailsPageComponent implements OnInit {
   }
 
   onDeleteReview(reviewId: number): void {
-    if (confirm('Are you sure you want to delete this review?')) {
-      this.apiService.deleteReview(reviewId).subscribe({
-        next: () => {
-          this.snackBar.open('Review deleted successfully!', 'Close', { duration: 3000 });
-          this.loadAlbumDetails();
-        },
-        error: (err) => this.snackBar.open('Error deleting the review.', 'Close', { duration: 3000 })
-      });
-    }
+    this.apiService.deleteReview(reviewId).subscribe({
+      next: () => {
+        this.snackBar.open('Review deleted successfully!', 'Close', { duration: 3000 });
+        this.loadAlbumDetails();
+      },
+      error: (err) => this.snackBar.open('Error deleting the review.', 'Close', { duration: 3000 })
+    });
   }
 
   getAlbumCover(albumDetails: AlbumDetails | null): string {
@@ -162,22 +227,9 @@ export class AlbumDetailsPageComponent implements OnInit {
       || 'https://placehold.co/300x300?text=No+Image';
   }
 
-  getScoreColorClass(score: number | null | undefined): string {
-    if (score === null || score === undefined) return '';
-    if (score >= 8.0) return 'score-high';
-    if (score >= 5.0) return 'score-medium';
-    return 'score-low';
-  }
-
-  getTrackArtists(track: DeezerTrack): string {
-    if (track?.contributors?.length > 0) {
-      const mainArtists = track.contributors
-        .filter(c => c.role === 'Main' || c.role === 'Featured')
-        .map(a => a.name)
-        .join(', ');
-      return mainArtists;
-    }
-    return track?.artist?.name || '';
+  getUserRatingForTrack(trackId: string, details: AlbumDetails): number {
+    const rating = details.currentUserTrackRatings.find(r => r.trackId === trackId);
+    return rating ? rating.rating : 0;
   }
 }
 

@@ -5,5 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record UpdateProfileDTO(
 
-		@NotBlank(message = "Email cannot be blank") @Email(message = "Email should be valid") String email) {
+		@NotBlank(message = "Email cannot be blank") 
+		@Email(message = "Email should be valid") String email) {
 }

@@ -1,12 +1,17 @@
 package com.viniciusmcabral.sound_rate.services;
 
+import java.util.NoSuchElementException;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.models.Follow;
 import com.viniciusmcabral.sound_rate.models.User;
 import com.viniciusmcabral.sound_rate.repositories.FollowRepository;
 import com.viniciusmcabral.sound_rate.repositories.UserRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.NoSuchElementException;
 
 @Service
 public class FollowService {
@@ -38,5 +43,30 @@ public class FollowService {
 		User userToUnfollow = userRepository.findByUsernameAndActiveTrue(usernameToUnfollow)
 				.orElseThrow(() -> new NoSuchElementException("User to unfollow not found: " + usernameToUnfollow));
 		followRepository.deleteByFollowerAndFollowing(currentUser, userToUnfollow);
+	}
+
+	@Transactional(readOnly = true)
+	public Page<UserDTO> getFollowers(String username, Pageable pageable) {
+		User user = findUserByUsername(username);
+		Page<Follow> followersPage = followRepository.findActiveFollowersByUser(user, pageable);
+		
+		return followersPage.map(follow -> convertUserToDto(follow.getFollower()));
+	}
+
+	@Transactional(readOnly = true)
+	public Page<UserDTO> getFollowing(String username, Pageable pageable) {
+		User user = findUserByUsername(username);
+		Page<Follow> followingPage = followRepository.findActiveFollowingByUser(user, pageable);
+		
+		return followingPage.map(follow -> convertUserToDto(follow.getFollowing()));
+	}
+
+	private User findUserByUsername(String username) {
+		return userRepository.findByUsernameAndActiveTrue(username)
+				.orElseThrow(() -> new NoSuchElementException("User not found: " + username));
+	}
+
+	private UserDTO convertUserToDto(User user) {
+		return new UserDTO(user.getId(), user.getUsername(), user.getAvatarUrl());
 	}
 }

@@ -39,7 +39,7 @@ export class ReviewDialogComponent {
 
   onSave(): void {
     if (this.form.valid) {
-      this.dialogRef.close(this.form.value.text);
+      this.dialogRef.close({ text: this.form.value.text });
     }
-  }  
+  }
 }

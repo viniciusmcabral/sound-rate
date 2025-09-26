@@ -1,9 +1,10 @@
 :root {
-  --background-dark: #14181c;
-  --surface-dark: #2c3440;
+  --background-dark: #0c0e10;
+  --surface-dark: #14181c;
   --primary-text: #e1e3e5;
   --secondary-text: #9ab;
   --accent-color: #5e1c7c;
+  --warn-color: #f44336;
 }
 
 html,
@@ -13,7 +14,7 @@ body {
 }
 
 body {
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   background-color: var(--background-dark);
   color: var(--primary-text);
 }
@@ -24,12 +25,49 @@ app-root {
   min-height: 100vh;
 }
 
-app-root .main-content {
-  flex: 1;
-}
-
 .image-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
   background: transparent !important;
   box-shadow: none !important;
   border-radius: 4px;
+}
+
+.user-list-dialog {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: var(--background-dark);
+  }
+}
+
+.review-dialog-container {
+  .mat-mdc-dialog-container .mdc-dialog__surface {
+    background-color: var(--background-dark);
+  }
+}
+
+mat-paginator {
+  margin-top: 24px;
+}
+
+.custom-paginator {
+
+  .mat-mdc-paginator-container {
+    background-color: var(--background-dark);
+    color: var(--secondary-text);
+  }
+
+  .mat-mdc-icon-button {
+    color: var(--secondary-text);
+  }
+
+  .mat-mdc-icon-button:disabled {
+    color: var(--surface-dark);
+  }
+
+  .mat-mdc-form-field-underline {
+    display: none;
+  }
+
+  .mat-mdc-paginator-range-label {
+    color: var(--secondary-text);
+    font-weight: 500;
+  }
 }

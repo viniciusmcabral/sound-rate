@@ -3,7 +3,7 @@ import { User } from './user.model';
 export interface RatingRequest {
   albumId: string;
   trackId?: string;
-  rating: number;
+  rating: number | null;
 }
 
 export interface AlbumRating {

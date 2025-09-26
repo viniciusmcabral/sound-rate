@@ -15,7 +15,7 @@ h1 {
 }
 
 .settings-card {
-    background-color: var(--surface-dark);
+    background-color: var(--accent-color);
 }
 
 .full-width {
@@ -23,10 +23,10 @@ h1 {
 }
 
 .danger-zone {
-    border: 1px solid #f44336;
+    border: 1px solid var(--warn-color);
 
     mat-card-title {
-        color: #f44336;
+        color: var(--warn-color);
     }
 }
 

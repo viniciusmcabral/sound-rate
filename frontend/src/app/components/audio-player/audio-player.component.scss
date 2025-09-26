@@ -1,0 +1,92 @@
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.audio-player-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: auto;
+    max-width: 400px;
+    border-radius: 8px;
+    height: 72px;
+    background-color: var(--surface-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 16px;
+    animation: slideUp 0.3s ease-out;
+    z-index: 2000;
+    overflow: hidden;
+}
+
+.track-cover {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.track-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    min-width: 0;
+
+    .track-title {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 1.05rem;
+    }
+
+    .track-artist {
+        font-size: 0.9rem;
+        color: var(--secondary-text);
+    }
+}
+
+.artist-and-timer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.track-timer {
+    font-size: 0.85rem;
+    color: var(--secondary-color);
+    font-weight: 500;
+}
+
+.track-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px !important;
+}
+
+.player-controls {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+        font-size: 42px;
+        height: 42px;
+        width: 42px;
+    }
+}
+
