@@ -1,0 +1,37 @@
+<div class="artist-page-container" *ngIf="artistPage$ | async as page; else loading">
+
+    <header class="artist-header">
+        <img [src]="page.artistDetails.picture_xl" [alt]="page.artistDetails.name" class="artist-photo">
+        <div class="artist-info">
+            <h1>{{ page.artistDetails.name }}</h1>
+            <div class="artist-stats">
+                <span>{{ page.artistDetails.nb_fan | number }} fans</span>
+                <span>•</span>
+                <span>{{ page.artistDetails.nb_album }} albums</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="albums-section" *ngIf="page.albums && page.albums.content.length > 0">
+        <h2 class="section-title">Albums</h2>
+        <div class="albums-grid">
+            <app-album-card *ngFor="let album of page.albums.content" [album]="album">
+            </app-album-card>
+        </div>
+    </section>
+
+    <p *ngIf="!page.albums || page.albums.content.length === 0" class="no-content-message">
+        This artist has no albums to display
+    </p>
+    
+    <mat-paginator class="custom-paginator" *ngIf="page.albums && page.albums.totalElements > page.albums.size"
+        [length]="page.albums.totalElements" [pageSize]="page.albums.size" [pageIndex]="page.albums.number"
+        [pageSizeOptions]="[12, 24, 48]" (page)="onPageChange($event)">
+    </mat-paginator>
+</div>
+
+<ng-template #loading>
+    <div class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+</ng-template>
