@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Welcome to SoundRate</title>
+</head>
+<body
+	style="font-family: Arial, sans-serif; text-align: center; color: #333;">
+	<div
+		style="max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px;">
+		<h2>Welcome to SoundRate!</h2>
+		<p>
+			Hi, <strong th:text="${username}">User</strong>!
+		</p>
+		<p>We're thrilled to have you join our community of music lovers.
+			Start discovering new albums, rating your favorites, and sharing your
+			opinions today.</p>
+		<a th:href="@{http://localhost:4200}"
+			style="background-color: #1DB954; color: white; padding: 15px 25px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0;">
+			Explore Now </a>
+		<p>Happy listening!</p>
+	</div>
+</body>
+</html>

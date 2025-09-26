@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.viniciusmcabral.sound_rate.dtos.request.ForgotPasswordRequestDTO;
 import com.viniciusmcabral.sound_rate.dtos.request.LoginRequestDTO;
 import com.viniciusmcabral.sound_rate.dtos.request.RegisterRequestDTO;
+import com.viniciusmcabral.sound_rate.dtos.request.ResetPasswordRequestDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.AuthResponseDTO;
 import com.viniciusmcabral.sound_rate.dtos.response.UserDTO;
 import com.viniciusmcabral.sound_rate.models.User;
@@ -49,4 +51,16 @@ public class AuthController {
 		AuthResponseDTO response = authService.registerUser(registerDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+
+	@PostMapping("/forgot-password")
+	public ResponseEntity<Void> forgotPassword(@RequestBody ForgotPasswordRequestDTO request) {
+		authService.requestPasswordReset(request.email());
+		return ResponseEntity.ok().build();
+	}
+	
+	@PostMapping("/reset-password")
+    public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequestDTO request) {
+        authService.performPasswordReset(request.token(), request.newPassword());
+        return ResponseEntity.ok().build();
+    }
 }

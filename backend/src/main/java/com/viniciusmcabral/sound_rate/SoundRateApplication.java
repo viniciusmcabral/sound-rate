@@ -11,5 +11,4 @@ public class SoundRateApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(SoundRateApplication.class, args);
 	}
-
 }
