@@ -4,5 +4,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DeezerAlbumSearchResponseDTO(List<DeezerAlbumDTO> data) {
+public record DeezerArtistSearchResponseDTO(List<DeezerArtistDTO> data) {
 }

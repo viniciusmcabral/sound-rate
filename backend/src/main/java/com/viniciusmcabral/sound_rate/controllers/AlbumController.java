@@ -1,29 +1,30 @@
 package com.viniciusmcabral.sound_rate.controllers;
 
-import com.viniciusmcabral.sound_rate.dtos.response.AlbumDetailsDTO;
-import com.viniciusmcabral.sound_rate.dtos.response.AlbumReviewDTO;
-import com.viniciusmcabral.sound_rate.dtos.deezer.DeezerAlbumDTO;
-import com.viniciusmcabral.sound_rate.services.AlbumService;
-import com.viniciusmcabral.sound_rate.services.ReviewService;
-import com.viniciusmcabral.sound_rate.services.DeezerService;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.viniciusmcabral.sound_rate.dtos.response.AlbumDashboardDTO;
+import com.viniciusmcabral.sound_rate.dtos.response.AlbumDetailsDTO;
+import com.viniciusmcabral.sound_rate.dtos.response.AlbumReviewDTO;
+import com.viniciusmcabral.sound_rate.services.AlbumService;
+import com.viniciusmcabral.sound_rate.services.ReviewService;
 
 @RestController
 @RequestMapping("/albums")
 public class AlbumController {
 
 	private final AlbumService albumService;
-	private final DeezerService deezerService;
 	private final ReviewService reviewService;
 
-	public AlbumController(AlbumService albumService, DeezerService deezerService, ReviewService reviewService) {
+	public AlbumController(AlbumService albumService, ReviewService reviewService) {
 		this.albumService = albumService;
-		this.deezerService = deezerService;
 		this.reviewService = reviewService;
 	}
 
@@ -33,15 +34,15 @@ public class AlbumController {
 		return ResponseEntity.ok(albumDetails);
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<List<DeezerAlbumDTO>> searchAlbums(@RequestParam("query") String query) {
-		List<DeezerAlbumDTO> results = deezerService.searchAlbums(query);
-		return ResponseEntity.ok(results);
-	}
-
 	@GetMapping("/{albumId}/reviews")
 	public ResponseEntity<Page<AlbumReviewDTO>> getReviewsForAlbum(@PathVariable String albumId, Pageable pageable) {
 		Page<AlbumReviewDTO> reviews = reviewService.getReviewsForAlbum(albumId, pageable);
 		return ResponseEntity.ok(reviews);
+	}
+
+	@GetMapping("/highest-rated")
+	public ResponseEntity<List<AlbumDashboardDTO>> getHighestRatedAlbums() {
+		List<AlbumDashboardDTO> albums = albumService.getHighestRatedAlbums();
+		return ResponseEntity.ok(albums);
 	}
 }

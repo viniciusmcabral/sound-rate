@@ -1,0 +1,9 @@
+<a [routerLink]="['/artist', artist.id]" class="card-link" [title]="artist.name">
+    <mat-card class="artist-card">
+        <img mat-card-image [src]="artist.picture_medium" [alt]="artist.name" class="artist-photo">
+
+        <mat-card-content class="artist-info">
+            <h3 class="artist-name">{{ artist.name }}</h3>
+        </mat-card-content>
+    </mat-card>
+</a>

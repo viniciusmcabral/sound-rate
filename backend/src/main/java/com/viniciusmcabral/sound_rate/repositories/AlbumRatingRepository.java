@@ -28,4 +28,10 @@ public interface AlbumRatingRepository extends JpaRepository<AlbumRating, Long> 
 	List<String> findAllAlbumIdsByUser(User user);
 
 	Page<AlbumRating> findByUser(User user, Pageable pageable);
+
+	long countByAlbumId(String albumId);
+
+	@Query("SELECT ar.albumId FROM AlbumRating ar " + "GROUP BY ar.albumId " + "HAVING COUNT(ar.albumId) >= 5 "
+			+ "ORDER BY (AVG(ar.rating) * LOG10(COUNT(ar.albumId))) DESC")
+	Page<String> findTopRatedAlbumIds(Pageable pageable);
 }

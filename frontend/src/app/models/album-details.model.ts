@@ -1,5 +1,6 @@
 import { AlbumReview } from './review.model';
 import { DeezerAlbum } from './deezer.model';
+import { UserTrackRating } from './user-rating.model';
 
 export interface AlbumDetails {
   deezerDetails: DeezerAlbum;
@@ -10,4 +11,14 @@ export interface AlbumDetails {
   likesCount: number;
   isLikedByCurrentUser: boolean;
   isOnListenLaterList: boolean;
+  currentUserTrackRatings: UserTrackRating[];
+  ratingsCount: number;
+}
+
+export interface AlbumDashboard {
+  id: string;
+  title: string;
+  coverUrl: string;
+  artistName: string;
+  averageRating: number;
 }

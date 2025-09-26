@@ -9,24 +9,68 @@ import { UserRating } from '../models/user-rating.model';
 import { Page } from '../models/page.model';
 import { DeezerAlbum } from '../models/deezer.model';
 import { User } from '../models/user.model';
+import { SearchResult } from '../models/search-result.model';
+import { ArtistPage } from '../models/artist-page.model';
+import { AlbumDashboard } from '../models/album-details.model';
+import { environment } from '../../environments/environment';
 
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+export interface ForgotPasswordRequest {
+  email: string;
+}
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private apiUrl = '/api/v1';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-  searchAlbums(query: string): Observable<DeezerAlbum[]> {
+  search(query: string): Observable<SearchResult[]> {
     const params = new HttpParams().set('query', query);
-    return this.http.get<DeezerAlbum[]>(`${this.apiUrl}/albums/search`, { params });
+    return this.http.get<SearchResult[]>(`${this.apiUrl}/search`, { params });
   }
 
   getAlbumDetails(albumId: string): Observable<AlbumDetails> {
     return this.http.get<AlbumDetails>(`${this.apiUrl}/albums/${albumId}`);
   }
 
+  getHighestRatedAlbums(): Observable<AlbumDashboard[]> {
+    return this.http.get<AlbumDashboard[]>(`${this.apiUrl}/albums/highest-rated`);
+  }
+
+  getArtistPage(artistId: number, page: number, size: number): Observable<ArtistPage> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<ArtistPage>(`${this.apiUrl}/artists/${artistId}`, { params });
+  }
+
+  getFollowers(username: string, page: number, size: number): Observable<Page<User>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<Page<User>>(`${this.apiUrl}/users/${username}/followers`, { params });
+  }
+
+  getFollowing(username: string, page: number, size: number): Observable<Page<User>> {
+    const params = new HttpParams().set('page', page.toString()).set('size', size.toString());
+    return this.http.get<Page<User>>(`${this.apiUrl}/users/${username}/following`, { params });
+  }
+
   rateAlbumOrTrack(ratingData: RatingRequest): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/ratings`, ratingData);
+  }
+
+  deleteRating(albumId?: string, trackId?: string): Observable<any> {
+    let params: { [param: string]: string } = {};
+
+    if (albumId) {
+      params['albumId'] = albumId;
+    }
+
+    if (trackId) {
+      params['trackId'] = trackId;
+    }
+
+    return this.http.delete(`${this.apiUrl}/ratings`, { params });
   }
 
   likeAlbum(albumId: string): Observable<void> {
@@ -112,5 +156,15 @@ export class ApiService {
 
   resetAvatar(): Observable<User> {
     return this.http.delete<User>(`${this.apiUrl}/users/me/avatar`);
+  }
+
+  requestPasswordReset(email: string): Observable<void> {
+    const payload: ForgotPasswordRequest = { email };
+    return this.http.post<void>(`${this.apiUrl}/auth/forgot-password`, payload);
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<void> {
+    const payload: ResetPasswordRequest = { token, newPassword };
+    return this.http.post<void>(`${this.apiUrl}/auth/reset-password`, payload);
   }
 }
