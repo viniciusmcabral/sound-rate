@@ -1,59 +1,56 @@
-# Frontend
+# SoundRate Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.2.2.
+This is the Angular frontend for the SoundRate application, a web site for discovering, rating, and reviewing music.
 
-## Development server
+## ✨ Features
 
-To start a local development server, run:
+- **User Authentication:** Login, Register, and Forgot/Reset Password pages.
+- **Dynamic Content:** Homepage with dashboards for highest-rated albums and most active users.
+- **Global Search:** A reactive search bar to find albums, artists, and users.
+- **Detailed Pages:** Dedicated pages for Album Details, Artist Profiles, and User Profiles.
+- **Interactive Components:** Reusable components for star ratings, data grids, and dialogs.
+- **Account Management:** A settings page for users to update their profile, password, and avatar.
+- **Full Application State Management:** A global `AuthService` using RxJS to manage user authentication state in real-time.
 
+## 🛠️ Tech Stack
+
+- **Framework:** Angular
+- **Language:** TypeScript
+- **Styling:** SCSS with Angular Material
+- **Reactivity:** RxJS
+- **Containerization:** Docker & Nginx
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js (LTS version recommended)
+- npm (Node Package Manager)
+- Angular CLI (`npm install -g @angular/cli`)
+
+### Installation & Running Locally
+
+1.  **Navigate to the frontend directory:**
+    ```bash
+    cd frontend
+    ```
+
+2.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
+
+3.  **Run the backend:**
+    For the frontend to work correctly, the backend API must be running. Ensure the backend is running (e.g., via Docker Compose) so that the proxy can connect to it.
+
+4.  **Start the development server:**
+    ```bash
+    ng serve
+    ```
+    The application will be available at `http://localhost:4200`. The development server uses the `proxy.conf.json` file to automatically redirect API requests from `/api/v1` to the backend at `http://localhost:8080`.
+
+## Build & Test Commands
+
+### Build for Production
+To create a production-ready build in the `dist/` folder, run:
 ```bash
-ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+ng build --configuration production

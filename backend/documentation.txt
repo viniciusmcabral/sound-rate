@@ -1,0 +1,175 @@
+================================
+API ROUTES OVERVIEW - SOUNDRATE
+================================
+
+Legend:
+- [AUTH]: Authentication required (JWT Bearer Token)
+- [PUBLIC]: Public access
+
+--- Auth Controller (/auth) ---
+
+POST   /auth/register
+       Description: Registers a new user.
+       Access: [PUBLIC]
+
+POST   /auth/login
+       Description: Authenticates a user and returns a JWT.
+       Access: [PUBLIC]
+
+POST   /auth/forgot-password
+       Description: Initiates the password reset process by sending an email to the user.
+       Access: [PUBLIC]
+
+POST   /auth/reset-password
+       Description: Finalizes the password reset process, setting a new password based on the token.
+       Access: [PUBLIC]
+
+
+--- User Controller (/users) ---
+
+GET    /users/{username}
+       Description: Gets the public profile details for a user.
+       Access: [PUBLIC]
+
+GET    /users/{username}/ratings
+       Description: Lists the albums rated by a user (paginated).
+       Access: [PUBLIC]
+
+GET    /users/{username}/likes
+       Description: Lists the albums liked by a user (paginated).
+       Access: [PUBLIC]
+
+PUT    /users/me/profile
+       Description: Updates the profile information of the authenticated user.
+       Access: [AUTH]
+
+PUT    /users/me/password
+       Description: Updates the password of the authenticated user.
+       Access: [AUTH]
+
+PUT    /users/me/avatar
+       Description: Uploads a new avatar for the authenticated user.
+       Access: [AUTH]
+
+DELETE /users/me/avatar
+       Description: Removes the custom avatar of the authenticated user.
+       Access: [AUTH]
+
+DELETE /users/me
+       Description: Deletes (soft delete) the account of the authenticated user.
+       Access: [AUTH]
+
+
+--- Follow Controller (/users) ---
+
+POST   /users/{username}/follow
+       Description: The authenticated user follows the user specified by {username}.
+       Access: [AUTH]
+
+DELETE /users/{username}/follow
+       Description: The authenticated user unfollows the user specified by {username}.
+       Access: [AUTH]
+
+GET    /users/{username}/following
+       Description: Lists the users that {username} is following (paginated).
+       Access: [PUBLIC]
+
+GET    /users/{username}/followers
+       Description: Lists the followers of {username} (paginated).
+       Access: [PUBLIC]
+
+
+--- Rating Controller (/ratings) ---
+
+POST   /ratings
+       Description: Creates or updates a rating for an album or track. If the rating is 'null', the rating is removed.
+       Access: [AUTH]
+
+DELETE /ratings
+       Description: Removes a rating for an album or track.
+       Access: [AUTH]
+
+GET    /ratings
+       Description: (Not implemented/specified, could be used in the future to fetch all of a user's ratings).
+       Access: [AUTH]
+
+
+--- Review Controller (/reviews) ---
+
+POST   /reviews
+       Description: Creates a new review for an album.
+       Access: [AUTH]
+
+PUT    /reviews/{id}
+       Description: Updates an existing review.
+       Access: [AUTH]
+
+DELETE /reviews/{id}
+       Description: Deletes an existing review.
+       Access: [AUTH]
+
+
+--- Listen Later Controller (/listen-later) ---
+
+GET    /listen-later
+       Description: Lists the albums in the authenticated user's "Listen Later" list (paginated).
+       Access: [AUTH]
+
+POST   /listen-later/{albumId}
+       Description: Adds an album to the "Listen Later" list.
+       Access: [AUTH]
+
+DELETE /listen-later/{albumId}
+       Description: Removes an album from the "Listen Later" list.
+       Access: [AUTH]
+
+
+--- Album Like Controller (/albums) ---
+
+POST   /albums/{albumId}/like
+       Description: The authenticated user likes an album.
+       Access: [AUTH]
+
+DELETE /albums/{albumId}/like
+       Description: The authenticated user unlikes an album.
+       Access: [AUTH]
+
+
+--- Review Like Controller (/reviews) ---
+
+POST   /reviews/{reviewId}/like
+       Description: The authenticated user likes a review.
+       Access: [AUTH]
+
+DELETE /reviews/{reviewId}/like
+       Description: The authenticated user unlikes a review.
+       Access: [AUTH]
+
+
+--- Album Controller (/albums) ---
+
+GET    /albums/highest-rated
+       Description: Returns a list of the highest-rated albums by the community.
+       Access: [PUBLIC]
+
+GET    /albums/{id}
+       Description: Gets all details for a specific album.
+       Access: [PUBLIC]
+
+GET    /albums/{albumId}/reviews
+       Description: Lists the reviews for a specific album (paginated).
+       Access: [PUBLIC]
+
+
+--- Artist Controller (/artists) ---
+
+GET    /artists/{artistId}
+       Description: Gets the details for an artist and a paginated list of their albums.
+       Access: [PUBLIC]
+
+
+--- Search Controller (/search) ---
+
+GET    /search
+       Description: Performs a global search for albums, artists, and users.
+       Access: [PUBLIC]
