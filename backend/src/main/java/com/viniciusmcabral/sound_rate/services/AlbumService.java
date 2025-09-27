@@ -57,30 +57,33 @@ public class AlbumService {
 
 	@Transactional(readOnly = true)
 	public AlbumDetailsDTO getAlbumDetails(String albumId) {
-		User currentUser = getCurrentUserOrNull();
-
-		if (currentUser == null)
-			return null;
-
 		DeezerAlbumDTO deezerDetails = Optional.ofNullable(deezerService.getAlbumDetails(albumId))
 				.orElseThrow(() -> new NoSuchElementException("Album not found on Deezer with ID: " + albumId));
 
 		Double communityScore = albumRatingRepository.findCommunityAverageRating(albumId).orElse(null);
+		long likesCount = albumLikeRepository.countByAlbumId(albumId);
+		long ratingsCount = albumRatingRepository.countByAlbumId(albumId);
 
 		Pageable firstPageOfReviews = PageRequest.of(0, 10, Sort.by("createdAt").descending());
-
 		List<AlbumReviewDTO> userReviews = albumReviewRepository.findActiveReviewsByAlbumId(albumId, firstPageOfReviews)
 				.getContent().stream().map(this::convertReviewToDto).collect(Collectors.toList());
-		List<TrackRatingDTO> currentUserTrackRatings = trackRatingRepository.findByUserAndAlbumId(currentUser, albumId)
-				.stream().map(this::convertTrackRatingToDto).collect(Collectors.toList());
 
-		Double currentUserRating = findCurrentUserRating(albumId);
-		AlbumReviewDTO currentUserReview = findCurrentUserReview(albumId);
+		User currentUser = getCurrentUserOrNull();
 
-		long likesCount = albumLikeRepository.countByAlbumId(albumId);
-		boolean isLikedByCurrentUser = isAlbumLikedByCurrentUser(albumId);
-		boolean isOnListenLaterList = isAlbumOnListenLaterList(albumId);
-		long ratingsCount = albumRatingRepository.countByAlbumId(albumId);
+		Double currentUserRating = null;
+		AlbumReviewDTO currentUserReview = null;
+		boolean isLikedByCurrentUser = false;
+		boolean isOnListenLaterList = false;
+		List<TrackRatingDTO> currentUserTrackRatings = Collections.emptyList();
+
+		if (currentUser != null) {
+			currentUserRating = findCurrentUserRating(albumId);
+			currentUserReview = findCurrentUserReview(albumId);
+			isLikedByCurrentUser = isAlbumLikedByCurrentUser(albumId);
+			isOnListenLaterList = isAlbumOnListenLaterList(albumId);
+			currentUserTrackRatings = trackRatingRepository.findByUserAndAlbumId(currentUser, albumId).stream()
+					.map(this::convertTrackRatingToDto).collect(Collectors.toList());
+		}
 
 		return new AlbumDetailsDTO(deezerDetails, communityScore, currentUserRating, currentUserReview, userReviews,
 				likesCount, isLikedByCurrentUser, isOnListenLaterList, currentUserTrackRatings, ratingsCount);
