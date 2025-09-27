@@ -17,7 +17,7 @@ import com.viniciusmcabral.sound_rate.models.User;
 import com.viniciusmcabral.sound_rate.services.FollowService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class FollowController {
 
 	private final FollowService followService;

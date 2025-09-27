@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.viniciusmcabral.sound_rate.services.ReviewLikeService;
 
 @RestController
-@RequestMapping("/reviews")
+@RequestMapping("/api/v1/reviews")
 public class ReviewLikeController {
 
 	private final ReviewLikeService reviewLikeService;

@@ -13,7 +13,7 @@ import com.viniciusmcabral.sound_rate.dtos.response.ArtistPageDTO;
 import com.viniciusmcabral.sound_rate.services.ArtistService;
 
 @RestController
-@RequestMapping("/artists")
+@RequestMapping("/api/v1/artists")
 public class ArtistController {
 
 	private final ArtistService artistService;

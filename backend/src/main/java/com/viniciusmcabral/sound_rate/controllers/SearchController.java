@@ -12,7 +12,7 @@ import com.viniciusmcabral.sound_rate.dtos.response.SearchResultDTO;
 import com.viniciusmcabral.sound_rate.services.SearchService;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("/api/v1/search")
 public class SearchController {
 
 	private final SearchService searchService;

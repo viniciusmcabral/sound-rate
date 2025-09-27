@@ -16,7 +16,7 @@ import com.viniciusmcabral.sound_rate.dtos.deezer.DeezerAlbumDTO;
 import com.viniciusmcabral.sound_rate.services.ListenLaterService;
 
 @RestController
-@RequestMapping("/listen-later")
+@RequestMapping("/api/v1/listen-later")
 public class ListenLaterController {
 
     private final ListenLaterService listenLaterService;

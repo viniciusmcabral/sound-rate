@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/albums")
+@RequestMapping("/api/v1/albums")
 public class AlbumLikeController {
 
 	private final AlbumLikeService albumLikeService;

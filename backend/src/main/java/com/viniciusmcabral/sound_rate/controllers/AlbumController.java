@@ -17,7 +17,7 @@ import com.viniciusmcabral.sound_rate.services.AlbumService;
 import com.viniciusmcabral.sound_rate.services.ReviewService;
 
 @RestController
-@RequestMapping("/albums")
+@RequestMapping("/api/v1/albums")
 public class AlbumController {
 
 	private final AlbumService albumService;
