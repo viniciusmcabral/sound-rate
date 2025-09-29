@@ -67,7 +67,7 @@ A RESTful API for the SoundRate application, a web site for discovering, rating,
 
 The complete and interactive API documentation is available via the Swagger UI. With the application running, access the following URL in your browser:
 
-[**http://localhost:8080/api/v1/swagger-ui/index.html**](http://localhost:8080/api/v1/swagger-ui/index.html)
+[**http://localhost:8080/swagger-ui/index.html**](http://localhost:8080/swagger-ui/index.html)
 
 ## 🗺️ API Endpoints Overview
 

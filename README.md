@@ -80,7 +80,7 @@ This project is designed to be run easily using Docker.
 4.  **Access the Application:**
     - **Frontend:** [http://localhost:4200](http://localhost:4200)
     - **Backend API:** [http://localhost:8080/api/v1](http://localhost:8080/api/v1)
-    - **API Documentation (Swagger):** [http://localhost:8080/api/v1/swagger-ui/index.html](http://localhost:8080/api/v1/swagger-ui/index.html)
+    - **API Documentation (Swagger):** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
 ## 📂 Project Structure
 
