@@ -205,3 +205,47 @@
   gap: 1.5rem;
   flex-wrap: wrap;
 }
+
+@media (max-width: 768px) {
+  .nav-container {
+    padding: 0 16px;
+  }
+
+  .app-title {
+    font-size: 1.8rem;
+  }
+
+  .username-label,
+  .logout-label {
+    display: none;
+  }
+
+  .profile-link {
+    padding: 0;
+  }
+
+  .logout-button {
+    min-width: auto;
+    padding: 8px;
+  }
+
+  .main-content {
+    padding: 16px;
+  }
+
+  .footer-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 2.5rem;
+  }
+
+  .footer-section.about p {
+    text-align: center;
+  }
+
+  .footer-section ul {
+    display: inline-block;
+    text-align: left;
+  }
+}

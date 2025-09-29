@@ -56,3 +56,31 @@ h1 {
     align-items: flex-start;
     gap: 1rem;
 }
+
+@media (max-width: 600px) {
+    .settings-container {
+        margin: 1rem;
+        gap: 1.5rem;
+    }
+
+    h1 {
+        font-size: 2rem;
+        text-align: center;
+    }
+
+    .avatar-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .avatar-actions {
+        align-items: center;
+        width: 100%;
+
+        button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+}

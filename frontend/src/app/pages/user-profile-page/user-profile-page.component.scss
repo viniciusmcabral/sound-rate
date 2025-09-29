@@ -140,19 +140,41 @@
     background-color: black;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 992px) {
+
+    .album-grid,
+    .ratings-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1rem;
+    }
+
     .profile-header {
         flex-direction: column;
-        align-items: center;
         text-align: center;
-        gap: 1rem;
+        gap: 1.5rem;
+    }
+
+    .profile-info h1 {
+        font-size: 2rem;
     }
 
     .profile-stats {
         margin-left: 0;
+        justify-content: center;
+        gap: 1rem;
     }
 
-    .activity-item {
-        flex-direction: column;
+    .stat-item .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .album-grid,
+    .ratings-grid {
+        grid-template-columns: 1fr;
     }
 }

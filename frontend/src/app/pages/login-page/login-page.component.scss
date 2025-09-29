@@ -86,3 +86,20 @@ a[routerLink="/forgot-password"] {
         opacity: 0.9;
     }
 }
+
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1rem;
+        min-height: auto;
+        align-items: flex-start;
+        padding-top: 3rem;
+    }
+
+    .login-card {
+        padding: 1rem 1.5rem;
+    }
+
+    mat-card-title {
+        font-size: 1.6rem;
+    }
+}

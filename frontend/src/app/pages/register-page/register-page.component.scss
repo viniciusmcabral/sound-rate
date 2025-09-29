@@ -64,8 +64,25 @@
 }
 
 .loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5rem;
+}
+
+@media (max-width: 480px) {
+    .register-container {
+        padding: 1rem;
+        min-height: auto;
+        align-items: flex-start;
+        padding-top: 2rem;
+    }
+
+    .register-card {
+        padding: 1rem 1.5rem;
+    }
+
+    mat-card-title {
+        font-size: 1.6rem;
+    }
 }

@@ -106,3 +106,55 @@
     align-items: center;
     padding: 5rem;
 }
+
+@media (max-width: 768px) {
+    .home-container {
+        padding: 16px;
+    }
+
+    .headline {
+        font-size: 2.5rem;
+    }
+
+    .subheadline {
+        font-size: 1rem;
+    }
+
+    .search-bar {
+        margin-bottom: 16px;
+    }
+
+    .filter-toggle-group {
+        transform: scale(0.9);
+        margin-bottom: 1.5rem;
+    }
+
+    .results-grid,
+    .album-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 16px;
+    }
+
+    .album-grid {
+        gap: 1rem;
+    }
+
+    .info-message {
+        padding: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .headline {
+        font-size: 2rem;
+    }
+
+    .filter-toggle-group {
+        transform: scale(0.8);
+    }
+
+    .results-grid,
+    .album-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

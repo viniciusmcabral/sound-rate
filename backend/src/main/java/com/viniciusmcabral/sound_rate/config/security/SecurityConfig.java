@@ -35,6 +35,7 @@ public class SecurityConfig {
 		return http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource))
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(req -> {
+					req.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 					req.requestMatchers(HttpMethod.POST, "/api/v1/auth/**").permitAll();
 					req.requestMatchers(HttpMethod.GET, "/api/v1/users/**").permitAll();
 					req.requestMatchers(HttpMethod.GET, "/api/v1/albums/**").permitAll();
