@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { AuthResponse } from '../models/auth.model';
 import { User } from '../models/user.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { User } from '../models/user.model';
 export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
-  private apiUrl = '/api/v1/auth';
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient, private router: Router) {
     const storedUser = localStorage.getItem('currentUser');
@@ -32,7 +33,7 @@ export class AuthService {
   }
 
   register(registerData: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/register`, registerData).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/register`, registerData).pipe(
       tap(response => {
         this.handleAuthentication(response);
       })
@@ -40,7 +41,7 @@ export class AuthService {
   }
 
   login(loginData: any): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, loginData).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, loginData).pipe(
       tap(response => {
         this.handleAuthentication(response);
       })
